@@ -4,6 +4,7 @@ import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import backgroundImage from '../../assets/images/nastya.jpg'
+import logo from '../../assets/images/lgo.png'
 
 const Login = ({ login, isAuthenticated, user }) => {
     const navigate = useNavigate()
@@ -79,16 +80,20 @@ const Login = ({ login, isAuthenticated, user }) => {
                                     style={{
                                         backgroundImage: `url(${backgroundImage})`,
                                         backgroundPosition: "center center",
-                                        // backgroundRepeat: "no-repeat"
+                                        backgroundRepeat: "no-repeat"
                                     }}
                                 >
                                     <span className="mask bg-gradient-dark opacity-3"></span>
-                                    <h4 className="mt-5 text-white font-weight-bolder position-absolute">
-                                        "Attention is the new currency"
-                                    </h4>
-                                    <p class="text-white position-absolute">
-                                        The more effortless the writing looks, the more effort the writer actually put into the process.
-                                    </p>
+                                    <div className="position-absolute bottom-0 start-0 mb-5 ms-5">
+                                        <p className="text-white text-start"> 
+                                            <img
+                                                src={logo} // Replace with the actual image URL
+                                                alt="Your Alt Text"
+                                                className="w-7 border-radius-sm img-fluid" // Adjust classes as needed
+                                            />
+                                            <strong> SJ-AOR</strong> Welcome to the admin panel for the SJ-AOR jesuits application
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             
