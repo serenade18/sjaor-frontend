@@ -37,7 +37,7 @@ const SideBar = ({ logout, user, isSidebarOpen, isAuthenticated }) => {
             
             <div className="sidenav-header">
                 <i className="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-                <Link className="navbar-brand m-0" to="/home" target="_blank">
+                <Link className="navbar-brand m-0" to={"/admin/home"} target="_blank">
                 <img src={navLogo} className="navbar-brand-img" alt="main_logo"/>
                     <span className="ms-1 font-weight-bolder text-lg text-white">SJ-AOR</span> <br/>
                 </Link>
@@ -49,7 +49,7 @@ const SideBar = ({ logout, user, isSidebarOpen, isAuthenticated }) => {
                 <ul className="navbar-nav">
                     
                     <li className="nav-item">
-                        <Link data-bs-toggle="collapse" to={"/home"} className="nav-link" role="button">
+                        <Link data-bs-toggle="collapse" to={"/admin/home"} className="nav-link" role="button">
                             <div className="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center">
                                 <i className="fi fi-sr-chart-tree-map text-lg text-white opacity-10"></i>
                             </div>

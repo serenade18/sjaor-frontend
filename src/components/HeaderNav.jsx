@@ -103,9 +103,9 @@ function HeaderNav({ user }) {
           <div className="sidenav-toggler sidenav-toggler-inner d-xl-block d-block d-lg-none">
             <a onClick={toggleSidebar} className="nav-link p-0 text-dark">
               <div className="sidenav-toggler-inner">
-                <i className="sidenav-toggler-line bg-white"></i>
-                <i className="sidenav-toggler-line bg-white"></i>
-                <i className="sidenav-toggler-line bg-white"></i>
+                <i className="sidenav-toggler-line bg-dark"></i>
+                <i className="sidenav-toggler-line bg-dark"></i>
+                <i className="sidenav-toggler-line bg-dark"></i>
               </div>
             </a>
           </div>
