@@ -3,33 +3,33 @@ class Config{
     static Sidebar = [
         {
             index: "1",
-            title: "New Orders",
-            url: "/neworders",
-            icons: "ni ni-money-coins"
+            title: "Users",
+            url: "/admin/users",
+            icons: "fa-solid fa-users text-lg text-white"
         },
         {
             index: "2",
             title: "Customer",
             url: "/customers",
-            icons: "ni ni-single-02"
+            icons: "ni ni-single-02 text-lg text-white"
         },
         {
             index: "3",
             title: "Orders",
             url: "/orders",
-            icons: "ni ni-cart"
+            icons: "ni ni-cart text-lg text-white"
         },
         {
             index: "4",
             title: "Payments",
             url: "/payments",
-            icons: "fas fa-university"
+            icons: "fas fa-university text-lg text-white"
         },
         {
             index: "5",
             title: "Invoice",
             url: "/invoice",
-            icons: "fa-solid fa-receipt"
+            icons: "fa-solid fa-receipt text-lg text-white"
         }
     ]
 }

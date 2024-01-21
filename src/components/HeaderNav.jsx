@@ -10,8 +10,8 @@ function HeaderNav({ user }) {
   const getPageName = () => {
     // Define your route-to-page name mapping here
     const routeToPageName = {
-      '/home': 'Dashboard',
-      '/orders': 'Orders List',
+      '/admin/home': 'Dashboard',
+      '/admin/users': 'Users',
       '/neworders': 'New Orders',
       '/payments': 'Payments List',
       '/addpayments': 'Add Payment',
@@ -90,18 +90,18 @@ function HeaderNav({ user }) {
         <div className="container-fluid py-1 px-3">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-              <li className="text-white">
+              <li className="text-dark">
                 <i className="ni ni-box-2"></i>
               </li>
-              <li className="breadcrumb-item text-sm text-white">
-                <a className="opacity-5 text-white" href="#">Pages</a>
+              <li className="breadcrumb-item text-sm text-dark">
+                <a className="opacity-5 text-dark" href="#">Pages › </a>  {getPageName()}
               </li>
             </ol>
-            <h6 className="font-weight-bolder mb-0 text-white">{getPageName()}</h6>
+            <h6 className="font-weight-bolder mb-0 text-dark">{getPageName()}</h6>
           </nav>
 
           <div className="sidenav-toggler sidenav-toggler-inner d-xl-block d-block d-lg-none">
-            <a onClick={toggleSidebar} className="nav-link p-0 text-white">
+            <a onClick={toggleSidebar} className="nav-link p-0 text-dark">
               <div className="sidenav-toggler-inner">
                 <i className="sidenav-toggler-line bg-white"></i>
                 <i className="sidenav-toggler-line bg-white"></i>
@@ -118,7 +118,7 @@ function HeaderNav({ user }) {
 
             <ul className="navbar-nav justify-content-end">
               <li className="nav-item d-flex align-items-center">
-                <div className="nav-link text-white font-weight-bold px-0">
+                <div className="nav-link text-dark font-weight-bold px-0">
                   <i className="fa fa-user me-sm-1" aria-hidden="true"></i>
                   {user && user.user_type === 'admin' && <span className="d-sm-inline d-none">{user ? user.first_name : ''} {user ? user.last_name : ''}</span>}
                   {user && user.user_type === 'normal' && <span className="d-sm-inline d-none">Hi,  {user ? user.first_name : ''}</span>}

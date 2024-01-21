@@ -12,6 +12,12 @@ import {
     ACTIVATION_SUCCESS, ACTIVATION_FAIL,
     GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
     LOGOUT,
+
+    // Account editing
+    ACCOUNT_EDIT_SUCCESS, ACCOUNT_EDIT_FAIL,
+    USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
+    DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
+
 }  from './types';
 
 // Application authentication and authorization 
@@ -360,3 +366,68 @@ export const logout= () => dispatch => {
         type: LOGOUT
     });
 }
+
+// Admin users
+
+
+export const fetchAllUsers = () => async (dispatch, getState) => {
+    const { access } = getState().auth;
+  
+    try {
+      // Make an HTTP GET request to fetch customer data using the environment variable
+      const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/users/`, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        const usersData = response;
+        dispatch({
+          type: USERS_FETCH_ALL_SUCCESS,
+          payload: usersData,
+        });
+      } else {
+        dispatch({
+          type: USERS_FETCH_ALL_FAIL,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching users data:", error);
+      dispatch({
+        type: USERS_FETCH_ALL_FAIL,
+      });
+    }
+};
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    const { access } = getState().auth;
+  
+    try {
+        const response = await Axios.delete(
+            `${import.meta.env.VITE_REACT_APP_API_URL}/api/delete-user/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${access}`,
+                }
+            }
+        );
+  
+        if (response.status === 201) {
+            dispatch({
+                type: DELETE_USER_SUCCESS
+            });
+
+            dispatch({ type: USER_UPDATE_LIST, payload: id });
+        } else {
+            dispatch({
+                type: DELETE_USER_FAIL,
+            });
+        }
+    } catch (error) {
+        console.error('Error posting play:', error);
+        dispatch({
+            type: DELETE_USER_FAIL,
+        });
+        throw error; // rethrow the error so that it can be caught in the handleFormSubmit function
+    }
+};

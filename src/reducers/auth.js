@@ -10,6 +10,12 @@ import {
     ACTIVATION_SUCCESS, ACTIVATION_FAIL,
     GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
     LOGOUT,
+
+    // Account editing
+    ACCOUNT_EDIT_SUCCESS, ACCOUNT_EDIT_FAIL,
+    USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
+    DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
+
 } from '../actions/types'
 
 const initialState = {
@@ -103,6 +109,39 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
+            };
+
+        case USERS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                users: payload.data, // Store the fetched users data
+            };
+
+        case USERS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                users: [], // Handle the failure case
+            }; 
+
+        case DELETE_USER_SUCCESS: 
+            const updateUser = state.user.filter(users => users.id !== payload.data);
+
+            return {
+                ...state,
+                users: updateUser,
+            };
+
+        case DELETE_USER_FAIL:
+            return {
+                ...state,
+            };     
+            
+        case USER_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updateUsers = state.users.filter((users) => users.id !== payload);
+            return {
+                ...state,
+                users: updateUsers,
             };
             
         default:

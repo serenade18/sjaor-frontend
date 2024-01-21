@@ -35,7 +35,7 @@ const Login = ({ login, isAuthenticated, user }) => {
     //is authenticated redirect
     if (isAuthenticated) {
         return (
-            navigate('/home')
+            navigate('/admin/home')
         );
     } 
 
@@ -50,7 +50,7 @@ const Login = ({ login, isAuthenticated, user }) => {
             if (response.success) {
                 // Display a success toast only when the login is successful
                 toast.success('Login successful', { toastId: 'success' });
-                navigate('/home');
+                navigate('/admin/home');
             } else if (response.error) {
                 // If the API response contains an 'error' property, show an error toast with the error message.
                 toast.error(response.error, { toastId: 'error' });
