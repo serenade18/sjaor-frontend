@@ -83,7 +83,7 @@ const Login = ({ login, isAuthenticated, user }) => {
                                         backgroundRepeat: "no-repeat"
                                     }}
                                 >
-                                    <span className="mask bg-gradient-dark opacity-3"></span>
+                                    <span className="mask bg-gradient-dark opacity-6"></span>
                                     <div className="position-absolute bottom-0 start-0 mb-5 ms-5">
                                         <p className="text-white text-start"> 
                                             <img
