@@ -15,6 +15,17 @@ import {
     ACCOUNT_EDIT_SUCCESS, ACCOUNT_EDIT_FAIL,
     USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
     DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
+    
+    // News
+    NEWS_FETCH_ALL_SUCCESS, NEWS_FETCH_ALL_FAIL,
+    NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
+    NEWS_DELETE_SUCCESS, NEWS_DELETE_FAIL, NEWS_UPDATE_LIST,
+    SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
+    NEWS_SEARCH_SUCCESS, NEWS_SEARCH_FAIL,
+    EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
+
+    // dashboard
+    DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
 
 } from '../actions/types'
 
@@ -22,7 +33,8 @@ const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
-    user: null
+    user: null,
+    news: []
 }
 
 export default function (state = initialState, action) {
@@ -142,6 +154,93 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 users: updateUsers,
+            };
+
+        // News
+
+        case SAVE_NEWS_SUCCESS:
+            return {
+                ...state,
+                news: payload.data,
+            };
+
+        case SAVE_NEWS_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_NEWS_SUCCESS:
+            return {
+                ...state,
+                news: payload.data,
+            };
+
+        case EDIT_NEWS_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_NEWS_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case NEWS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                news: payload.data, // Store the fetched customer data
+            };
+
+        case NEWS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                news: [], // Handle the failure case
+            };
+
+        case NEWS_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                news: payload.data, // Store the fetched NEWS data
+            };
+
+        case NEWS_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                news: [], // Store the fetched NEWS data
+            };   
+        
+        case NEWS_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedNews = state.news.filter((news) => news.id !== payload);
+            return {
+                ...state,
+                news: updatedNews,
+            };
+
+        case NEWS_DELETE_SUCCESS: 
+            const updatedNew = state.news.filter(news => news.id !== payload.data);
+
+            return {
+                ...state,
+                news: updatedNew,
+            };
+
+        case NEWS_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
+        // Dashboard
+        
+        case DASHBOARD_FETCH_SUCCESS:
+            return {
+                ...state,
+                dashboard: payload
+            };
+
+        case DASHBOARD_FETCH_FAIL:
+            return {
+                ...state,
             };
             
         default:

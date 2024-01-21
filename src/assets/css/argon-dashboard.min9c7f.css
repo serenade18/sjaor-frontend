@@ -20827,6 +20827,10 @@ textarea.form-control,textarea.form-control-lg,textarea.form-control-sm {
     background-image: linear-gradient(310deg,#212229,#212529)
 }
 
+.bg-gradient-red {
+    background-image: linear-gradient(310deg,#C81B1B,#C81B1B);
+}
+
 .bg-gradient-faded-primary {
     background-image: radial-gradient(370px circle at 80% 50%,rgba(94,114,228,.6) 0,#324cdd 100%)
 }

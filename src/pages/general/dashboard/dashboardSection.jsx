@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { fetchDashboard } from '../../../../actions/auth';
+import { fetchDashboard } from '../../../actions/auth';
 
 const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
     const navigate = useNavigate();
 
     const [totalUsers, setTotalUsers] = useState(0);
-    const [ticketsSold, setTicketsSold] = useState(0);
-    const [activePlays, setActivePlays] = useState(0);
-    const [totalStreams, setTotalStreams] = useState(0);
+    const [newsPosted, setNewsPosted] = useState(0);
+    const [verifiedAdusums, setVerifiedAdusums] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
 
     useEffect(() => {
 
         fetchDashboard().then((response) => {
-            setTotalUsers(response.users);
-            setTicketsSold(response.tickets_sold);
-            setActivePlays(response.active_plays);
-            setTotalStreams(response.active_streams);
+            setTotalUsers(response.all_users);
+            setNewsPosted(response.all_news);
+            setVerifiedAdusums(response.adusums);
+            setTotalProducts(response.products)
         });
     }, [isAuthenticated, user, Navigate])
 
@@ -28,19 +28,19 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                     <div className="col-lg-3 col-md-6 col-12">
                         <div className="card bg-gray-901 mb-4">
                             <div className="card-body p-3">
-                                <div className="row">
+                                <div className="row cursor-pointer" onClick={() => navigate('/admin/adusums')}>
                                     
                                     <div className="col-4 text-end align-items-center">
-                                        <div className="icon icon-shape bg-gradient-red shadow-primary text-center">
-                                            <i className="fi fi-sr-chart-tree-map opacity-10" aria-hidden="true"></i>
+                                        <div className="icon icon-shape bg-gradient-success shadow-primary text-center">
+                                            <i className="fa-solid fa-church opacity-10" aria-hidden="true"></i>
                                         </div>
                                     </div>
 
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-capitalize font-weight-bold">Active Plays</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold"> verified Adusums</p>
                                             <h5 className="font-weight-bolder text-dark">
-                                                {activePlays}
+                                                {verifiedAdusums}
                                             </h5>
                                             <p className="mb-0">
                                                 <span className="text-success text-sm font-weight-bolder"></span>
@@ -56,19 +56,19 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                     <div className="col-lg-3 col-md-6 col-12">
                         <div className="card bg-gray-901 mb-4">
                             <div className="card-body p-3">
-                                <div className="row">
+                                <div className="row cursor-pointer" onClick={() => navigate('/admin/news')}>
                                     
                                     <div className="col-4 text-end">
-                                        <div className="icon icon-shape bg-gradient-red shadow-danger text-center">
-                                            <i className="fi fi-rr-film text-lg opacity-10" aria-hidden="true"></i>
+                                        <div className="icon icon-shape bg-gradient-success shadow-danger text-center">
+                                            <i className="fi fi-rs-newspaper text-lg opacity-10" aria-hidden="true"></i>
                                         </div>
                                     </div>
 
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-capitalize font-weight-bold">Active Streams</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold">Posted News</p>
                                             <h5 className="font-weight-bolder text-dark">
-                                                {totalStreams}
+                                                {newsPosted}
                                             </h5>
                                             <p className="mb-0">
                                                 <span className="text-success text-sm font-weight-bolder"></span>
@@ -83,16 +83,16 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                     <div className="col-lg-3 col-md-6 col-12">
                         <div className="card bg-gray-901 mb-4">
                             <div className="card-body p-3">
-                                <div className="row">
+                                <div className="row cursor-pointer" onClick={() => navigate('/admin/users')}>
                                     <div className="col-4 text-end">
-                                        <div className="icon icon-shape bg-gradient-red shadow-success text-center">
+                                        <div className="icon icon-shape bg-gradient-success shadow-success text-center">
                                             <i className="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
                                         </div>
                                     </div>
 
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-capitalize font-weight-bold">Active Users</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold">Active Users</p>
                                             <h5 className="font-weight-bolder text-dark">
                                                 {totalUsers}
                                             </h5>
@@ -109,17 +109,17 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                     <div className="col-lg-3 col-md-6 col-12">
                         <div className="card bg-gray-901 mb-4">
                             <div className="card-body p-3">
-                                <div className="row">
+                                <div className="row cursor-pointer" onClick={() => navigate('/admin/products')}>
                                     <div className="col-4 text-end">
-                                        <div className="icon icon-shape bg-gradient-red shadow-success text-center">
-                                            <i className="fa-solid fa-ticket text-lg opacity-10" aria-hidden="true"></i>
+                                        <div className="icon icon-shape bg-gradient-success shadow-success text-center">
+                                            <i className="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-capitalize font-weight-bold">Sold Tickets</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold">Products</p>
                                             <h5 className="font-weight-bolder text-dark">
-                                                {ticketsSold}
+                                                {totalProducts}
                                             </h5>
                                             <p className="mb-0">
                                                 <span className="text-success text-sm font-weight-bolder"></span>
