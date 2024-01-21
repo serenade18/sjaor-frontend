@@ -12,6 +12,9 @@ import './assets/css/argon-dashboard.min9c7f.css'
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const AdminSignup = lazy(() =>  import('./pages/auth/AdminSignup'));
 const Login = lazy(() => import('./pages/auth/Login'));
+const Activate = lazy(() => import('./pages/auth/Activate'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
+const ResetPasswordConfirm = lazy(() => import('./pages/auth/ResetPasswordConfirm'));
 
 function App() {
   useEffect(() => {
@@ -35,6 +38,9 @@ function App() {
             <Route exact path='/signup' element={<Signup/>}/>
             <Route exact path="/admin-signup" element={<AdminSignup />} />
             <Route exact path="/" element={<Login />}/>
+            <Route exact path="/activate/:uid/:token" element={<Activate />}/>
+            <Route exact path="/reset-password" element={<ResetPassword />}/>
+            <Route exact path="/password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm />}/>
           </Routes>
         </Suspense>
       </Router>

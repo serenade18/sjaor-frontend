@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-import backgroundImage from '../../assets/images/lock.jpg'
+import backgroundImage from '../../assets/images/nastya.jpg'
 
 const Login = ({ login, isAuthenticated, user }) => {
     const navigate = useNavigate()
@@ -78,11 +78,17 @@ const Login = ({ login, isAuthenticated, user }) => {
                                     className="position-relative bg-gradient-primary h-100 m-3 py-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
                                     style={{
                                         backgroundImage: `url(${backgroundImage})`,
-                                        backgroundPosition: "cover",
+                                        backgroundPosition: "center center",
                                         // backgroundRepeat: "no-repeat"
                                     }}
                                 >
                                     <span className="mask bg-gradient-dark opacity-3"></span>
+                                    <h4 className="mt-5 text-white font-weight-bolder position-absolute">
+                                        "Attention is the new currency"
+                                    </h4>
+                                    <p class="text-white position-absolute">
+                                        The more effortless the writing looks, the more effort the writer actually put into the process.
+                                    </p>
                                 </div>
                             </div>
                             
