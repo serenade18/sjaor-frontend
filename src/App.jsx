@@ -11,6 +11,7 @@ import './assets/css/argon-dashboard.min9c7f.css'
 // Lazy load components
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const AdminSignup = lazy(() =>  import('./pages/auth/AdminSignup'));
+const Login = lazy(() => import('./pages/auth/Login'));
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
             {/* Auth Pages */}
             <Route exact path='/signup' element={<Signup/>}/>
             <Route exact path="/admin-signup" element={<AdminSignup />} />
+            <Route exact path="/" element={<Login />}/>
           </Routes>
         </Suspense>
       </Router>
