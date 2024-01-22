@@ -567,60 +567,6 @@ export const fetchNewsDetails = (id) => async (dispatch, getState) => {
     }
 };
 
-const fetchNewsById = async (id, token) => {
-  try {
-    // Make an HTTP GET request to your API endpoint
-    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/news/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    return null;
-  }
-};
-  
-export const searchNews = (id) => async (dispatch) => {
-    try {
-      if (localStorage.getItem('access')) {
-        const token = localStorage.getItem('access');
-        const response = await fetchNEWSById(id, token);
-  
-        if (response && response.status === 200) {
-          const newsData = await response.json();
-          console.log("Customer Data:", newsData); // Log the customer data
-          dispatch({
-            type: NEWS_SEARCH_SUCCESS,
-            payload: newsData
-          })
-          return newsData; // Return the data received from the API
-        } else {
-          console.log("API Error:", response); // Log the API response in case of an error
-          dispatch({
-            type: NEWS_SEARCH_SUCCESS,
-            payload: response
-          })
-          return response; // Return the error response for debugging
-        }
-      } else {
-        // Handle unauthenticated user
-        dispatch({
-          type: NEWS_SEARCH_FAIL,
-        })
-        return [];
-      }
-    } catch (error) {
-      console.error("Error fetching customer data:", error); // Log any network errors
-      return [];
-    }
-};
-
 export const saveNews = (formData) => async (dispatch, getState) => {
   const { access } = getState().auth;
 
@@ -656,28 +602,27 @@ export const saveNews = (formData) => async (dispatch, getState) => {
   }
 }  
 
-export const editNews = (title, image, body, author, id) => async (dispatch, getState) => {
+export const editNews = (formData, id) => async (dispatch, getState) => {
   const { access } = getState().auth;
 
-  const config = {
-    headers: {
-      'Content-type': 'application/json',
-      Authorization: `Bearer ${access}`,
-    },
-    method: 'PUT',
-    body: JSON.stringify({ title, image, body, author}),
-  };
-
   try {
-    const res = await fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/api/news/${id}/`, config);
+    const response = await Axios.put(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/api/news/${id}/`,
+      formData,
+      {
+          headers: {
+              Authorization: `Bearer ${access}`,
+              'Content-Type': 'multipart/form-data',
+          }
+      }
+  );
 
-    if (res.ok) {
-      const data = await res.json();
-      dispatch({
-        type: EDIT_NEWS_SUCCESS,
-        payload: data,
-      });
-      return data;
+    if (response.status === 201) {
+        const newsData = response.data;
+        dispatch({
+            type: EDIT_NEWS_SUCCESS,
+            payload: newsData,
+        });
     } else {
       const error = await res.json();
       dispatch({

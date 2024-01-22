@@ -12,7 +12,6 @@ import {
     LOGOUT,
 
     // Account editing
-    ACCOUNT_EDIT_SUCCESS, ACCOUNT_EDIT_FAIL,
     USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
     DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
     
@@ -21,7 +20,6 @@ import {
     NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
     NEWS_DELETE_SUCCESS, NEWS_DELETE_FAIL, NEWS_UPDATE_LIST,
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
-    NEWS_SEARCH_SUCCESS, NEWS_SEARCH_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
 
     // dashboard
@@ -34,7 +32,8 @@ const initialState = {
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
     user: null,
-    news: []
+    news: [],
+    newsDetails: null
 }
 
 export default function (state = initialState, action) {
@@ -200,13 +199,13 @@ export default function (state = initialState, action) {
         case NEWS_FETCH_DETAILS_SUCCESS:
             return {
                 ...state,
-                news: payload.data, // Store the fetched NEWS data
+                newsDetails: payload, // Store the fetched NEWS data
             };
 
         case NEWS_FETCH_DETAILS_FAIL:
             return {
                 ...state,
-                news: [], // Store the fetched NEWS data
+                newsDetails: [], // Store the fetched NEWS data
             };   
         
         case NEWS_UPDATE_LIST:

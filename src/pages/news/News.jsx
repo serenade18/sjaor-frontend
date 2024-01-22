@@ -44,7 +44,11 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
     } 
 
     const viewNews = (news_id) => {
-        navigate('/newsdetails/' + news_id);
+        navigate('/admin/newsdetails/' + news_id);
+    };
+
+    const EditNews = (news_id) => {
+        navigate('/admin/edit-news/' + news_id);
     };
 
     const handleDelete = async (news_id) => {
@@ -210,6 +214,17 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                                                 <i className="fas fa-eye" aria-hidden="true"></i>
                                                                             </button>
                                                                             <span>View</span>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className="text-xs font-weight-bold">
+                                                                        <div className="d-flex align-items-center">
+                                                                            <button
+                                                                                className="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
+                                                                                onClick={() => EditNews(news.id)}
+                                                                            >
+                                                                                <i className="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                                                                            </button>
+                                                                            <span>Edit</span>
                                                                         </div>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">

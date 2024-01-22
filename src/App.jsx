@@ -21,6 +21,8 @@ const Users = lazy(() => import('./pages/general/Users'));
 
 const News = lazy(() => import('./pages/news/News'));
 const AddNews = lazy(() => import('./pages/news/AddNews'));
+const EditNews = lazy(() => import('./pages/news/EditNews'));
+const ViewNews = lazy(() => import('./pages/news/ViewNews'));
 
 const Events = lazy(() => import('./pages/events/Events'));
 const Adusums = lazy(() => import('./pages/general/Adusums'));
@@ -70,6 +72,8 @@ function App() {
               {/* News */}
               <Route exact path="/admin/news" element={<News/>}/>
               <Route exact path="/admin/addnews" element={<AddNews/>}/>
+              <Route exact path="/admin/edit-news/:id" element={<EditNews/>}/>
+              <Route exact path="/admin/newsdetails/:id" element={<ViewNews/>}/>
 
               {/* Events */}
               <Route exact path="/admin/events" element={<Events/>}/>

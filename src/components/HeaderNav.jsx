@@ -22,6 +22,8 @@ function HeaderNav({ user }) {
       '/admin/archivium': 'Archivium',
       '/admin/products': 'Products',
       '/admin/addnews': 'Add News',
+      '/admin/addnews': 'Add News',
+      '/admin/addnews': 'Add News',
       '/balance': 'Balance',
       '/profit': 'Profit',
       '/paidfarmers': 'Farmers Graph',
@@ -33,10 +35,10 @@ function HeaderNav({ user }) {
 
     if (id) {
       // If "id" exists, it's a dynamic route; return the appropriate page name
-      if (location.pathname.includes('customerdetails')) {
-        return 'Edit Customer';
-      } else if (location.pathname.includes('ordersdetails')) {
-        return 'Edit Order';
+      if (location.pathname.includes('newsdetails')) {
+        return 'View News';
+      } else if (location.pathname.includes('edit-news')) {
+        return 'Edit News';
       } else if (location.pathname.includes('paymentsdetails')) {
         return 'Edit Payment';
       } else if (location.pathname.includes('batchdetails')) {
