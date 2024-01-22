@@ -18,7 +18,10 @@ const ResetPasswordConfirm = lazy(() => import('./pages/auth/ResetPasswordConfir
 
 const Home = lazy(() => import('./pages/general/Home'));
 const Users = lazy(() => import('./pages/general/Users'));
+
 const News = lazy(() => import('./pages/news/News'));
+const AddNews = lazy(() => import('./pages/news/AddNews'));
+
 const Events = lazy(() => import('./pages/events/Events'));
 const Adusums = lazy(() => import('./pages/general/Adusums'));
 const Documents = lazy(() => import('./pages/general/Documents'));
@@ -66,6 +69,7 @@ function App() {
 
               {/* News */}
               <Route exact path="/admin/news" element={<News/>}/>
+              <Route exact path="/admin/addnews" element={<AddNews/>}/>
 
               {/* Events */}
               <Route exact path="/admin/events" element={<Events/>}/>

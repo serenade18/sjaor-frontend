@@ -621,27 +621,27 @@ export const searchNews = (id) => async (dispatch) => {
     }
 };
 
-export const saveNews = (name, phone, customer_id, town, kgs, packaging, discount, transport, transporters, rider, comment, farmer_id, rice_type, vat, farmer_price, price, amount) => async (dispatch, getState) => {
+export const saveNews = (formData) => async (dispatch, getState) => {
   const { access } = getState().auth;
 
-  const config = {
-      headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${access}`,
-      },
-      method: 'POST',
-      body: JSON.stringify({ name, phone, customer_id, town, kgs, packaging, discount, transport, transporters, rider, comment, farmer_id, rice_type, vat, farmer_price, price, amount })
-  };
-
   try {
-      const res = await fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/api/news/`, config);
+      const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/news/`,
+      formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${access}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            }
+        );
 
-      if (res.ok) {
+      if (response.status === 201) {
           const data = await res.json();
           dispatch({
             type: SAVE_NEWS_SUCCESS,
             payload: data
           });
+          console.log(data)
           return { success: true, data };
       } else {
           const error = await res.json();
@@ -656,7 +656,7 @@ export const saveNews = (name, phone, customer_id, town, kgs, packaging, discoun
   }
 }  
 
-export const editNews = (name, phone, customer_id, town, kgs, packaging, discount, transport, transporters, rider, comment, farmer_id, rice_type, vat, farmer_price, price, amount, id) => async (dispatch, getState) => {
+export const editNews = (title, image, body, author, id) => async (dispatch, getState) => {
   const { access } = getState().auth;
 
   const config = {
@@ -665,7 +665,7 @@ export const editNews = (name, phone, customer_id, town, kgs, packaging, discoun
       Authorization: `Bearer ${access}`,
     },
     method: 'PUT',
-    body: JSON.stringify({ name, phone, customer_id, town, kgs, packaging, discount, transport, transporters, rider, comment, farmer_id, rice_type, vat, farmer_price, price, amount}),
+    body: JSON.stringify({ title, image, body, author}),
   };
 
   try {

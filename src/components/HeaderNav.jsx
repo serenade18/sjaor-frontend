@@ -21,7 +21,7 @@ function HeaderNav({ user }) {
       '/admin/ignatian-thoughts': 'Ignatian Thoughts',
       '/admin/archivium': 'Archivium',
       '/admin/products': 'Products',
-      '/debtors-list': 'Current Debt',
+      '/admin/addnews': 'Add News',
       '/balance': 'Balance',
       '/profit': 'Profit',
       '/paidfarmers': 'Farmers Graph',
