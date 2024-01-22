@@ -59,6 +59,27 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
         startPage + maxPagesDisplayed - 1
     );
 
+    //  function to get the filename from the full path
+    const getFileName = (filePath) => {
+        const startIndex = filePath.lastIndexOf('/') + 1;
+        return filePath.substring(startIndex);
+    };
+
+    // Function to trigger pdf download
+    const downloadCatalogue = (catalogueId) => {
+        // Find the selected catalogue using the ID
+        const selectedCatalogue = catalogues.find(catalogue => catalogue.id === catalogueId);
+
+        // Ensure the catalogue is found
+        if (selectedCatalogue) {
+            // Use the catalogue_file to initiate the download
+            window.open(selectedCatalogue.catalogue_file, '_blank');
+        } else {
+            // Handle the case where the catalogue is not found
+            console.error('Catalogue not found');
+        }
+    };
+
     return (
         <div>
             <HeaderNav/>
@@ -147,7 +168,9 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
                                                                         <span className="my-2 text-xs">{catalogues.catalogue_name}</span>
                                                                     </td>
                                                                     <td className="w-20">
-                                                                    <span className="my-2 text-xs">{catalogues.catalogue_file}</span>
+                                                                        <span className="my-2 text-xs">
+                                                                            <i className="fa-regular fa-file-pdf text-lg text-danger"></i> {getFileName(catalogues.catalogue_file)}
+                                                                        </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">
@@ -158,7 +181,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => viewCatalogues(catalogues.id)}
+                                                                                onClick={() => downloadCatalogue(catalogues.id)}
                                                                             >
                                                                                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                                                                             </button>
