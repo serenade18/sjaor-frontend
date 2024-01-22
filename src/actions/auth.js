@@ -14,7 +14,6 @@ import {
     LOGOUT,
 
     // Account editing
-    ACCOUNT_EDIT_SUCCESS, ACCOUNT_EDIT_FAIL,
     USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
     DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
 
@@ -23,8 +22,14 @@ import {
     NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
     NEWS_DELETE_SUCCESS, NEWS_DELETE_FAIL, NEWS_UPDATE_LIST,
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
-    NEWS_SEARCH_SUCCESS, NEWS_SEARCH_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
+
+    // Catalogues
+    CATALOGUES_FETCH_ALL_SUCCESS, CATALOGUES_FETCH_ALL_FAIL,
+    CATALOGUES_FETCH_DETAILS_SUCCESS, CATALOGUES_FETCH_DETAILS_FAIL,
+    CATALOGUES_DELETE_SUCCESS, CATALOGUES_DELETE_FAIL, CATALOGUES_UPDATE_LIST,
+    SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
+    EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
 
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
@@ -638,3 +643,164 @@ export const editNews = (formData, id) => async (dispatch, getState) => {
     return { success: false, error: 'Network error' };
   }
 };
+
+// Api Handler for Catalogues
+
+export const fetchAllCatalogues = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/catalogues/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const cataloguesData = response.data;
+      dispatch({
+        type: CATALOGUES_FETCH_ALL_SUCCESS,
+        payload: cataloguesData,
+      });
+    } else {
+      dispatch({
+        type: CATALOGUES_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching CATALOGUES data:", error);
+    dispatch({
+      type: CATALOGUES_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteCatalogues = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/catalogues/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: CATALOGUES_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: CATALOGUES_UPDATE_LIST, payload: id }); // Send the deleted CATALOGUES ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: CATALOGUES_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: CATALOGUES_DELETE_FAIL });
+  }
+};
+
+export const fetchCatalogueDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/catalogues/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const cataloguesData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: CATALOGUES_FETCH_DETAILS_SUCCESS,
+        payload: cataloguesData,
+      });
+      return cataloguesData
+    } else {
+      dispatch({
+        type: CATALOGUES_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching CATALOGUES data:", error);
+    dispatch({
+      type: CATALOGUES_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveCatalogues = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/catalogues/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_CATALOGUES_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_CATALOGUES_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editCatalogues = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/catalogues/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const cataloguesData = response.data;
+      dispatch({
+          type: EDIT_CATALOGUES_SUCCESS,
+          payload: cataloguesData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_CATALOGUES_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_CATALOGUES_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
+};
+

@@ -20803,6 +20803,10 @@ textarea.form-control,textarea.form-control-lg,textarea.form-control-sm {
     background-image: linear-gradient(310deg,#22a7f0,#22a7f0)
 }
 
+.bg-gradient-green {
+    background-image: linear-gradient(310deg,#2ecc71,#2ecc71)
+}
+
 .bg-gradient-blue {
     background-color: #fff
 }

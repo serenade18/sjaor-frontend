@@ -22,6 +22,13 @@ import {
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
 
+    // Catalogues
+    CATALOGUES_FETCH_ALL_SUCCESS, CATALOGUES_FETCH_ALL_FAIL,
+    CATALOGUES_FETCH_DETAILS_SUCCESS, CATALOGUES_FETCH_DETAILS_FAIL,
+    CATALOGUES_DELETE_SUCCESS, CATALOGUES_DELETE_FAIL, CATALOGUES_UPDATE_LIST,
+    SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
+    EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
+
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
 
@@ -33,7 +40,9 @@ const initialState = {
     isAuthenticated: null,
     user: null,
     news: [],
-    newsDetails: null
+    newsDetails: null,
+    catalogues: [],
+    catalogueDetails: null
 }
 
 export default function (state = initialState, action) {
@@ -225,6 +234,81 @@ export default function (state = initialState, action) {
             };
 
         case NEWS_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
+            
+        // News
+
+        case SAVE_CATALOGUES_SUCCESS:
+            return {
+                ...state,
+                catalogues: payload.data,
+            };
+
+        case SAVE_CATALOGUES_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_CATALOGUES_SUCCESS:
+            return {
+                ...state,
+                catalogues: payload.data,
+            };
+
+        case EDIT_CATALOGUES_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_CATALOGUES_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case CATALOGUES_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                catalogues: payload.data, // Store the fetched customer data
+            };
+
+        case CATALOGUES_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                catalogues: [], // Handle the failure case
+            };
+
+        case CATALOGUES_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                catalogueDetails: payload, // Store the fetched CATALOGUES data
+            };
+
+        case CATALOGUES_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                catalogueDetails: [], // Store the fetched CATALOGUES data
+            };   
+        
+        case CATALOGUES_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedCatalogues = state.catalogues.filter((catalogues) => catalogues.id !== payload);
+            return {
+                ...state,
+                catalogues: updatedCatalogues,
+            };
+
+        case CATALOGUES_DELETE_SUCCESS: 
+            const updatedCatalogue = state.catalogues.filter(catalogues => catalogues.id !== payload.data);
+
+            return {
+                ...state,
+                catalogues: updatedCatalogue,
+            };
+
+        case CATALOGUES_DELETE_FAIL:
             return {
                 ...state,
             };    
