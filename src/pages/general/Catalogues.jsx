@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
-import { fetchAllCatalogues } from '../../actions/auth'
+import { fetchAllCatalogues, saveCatalogues, deleteCatalogues } from '../../actions/auth'
 
-const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
+const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatalogues, deleteCatalogues }) => {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(1);
     const cataloguesPerPage = 24;
     const maxPagesDisplayed = 5;
+    const { id } = useParams();
+    const formRef = useRef(null);
 
     const desktopStyle = {
         width: 'calc(100% - 265px)',
@@ -80,6 +82,100 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
         }
     };
 
+    const [formData, setFormData] = useState({
+        catalogue_name: '',
+        catalogue_file: null,
+    })
+
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    
+    const [buttonText, setButtonText] = useState('Add Catalogue'); // Initial button text
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => {
+        setModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setModalOpen(false);
+        setFormData({
+            catalogue_name: '',
+            catalogue_file: null,
+        });
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        const formDataToSend = new FormData();
+
+        formDataToSend.append('catalogue_name', formData.catalogue_name);
+        formDataToSend.append('catalogue_file', formData.catalogue_file);
+
+        try {
+            const response = await saveCatalogues(formDataToSend);
+            console.log(response);
+
+            // console.log('News posted successfully');
+            // Show success toast
+            toast.success('News posted successfully', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
+            navigate('/admin/news');
+
+        } catch (error) {
+            console.error('Error posting play', error.message);
+            // Show error toast
+            toast.error('Error posting play. Please try again.', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
+            return;
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, files } = e.target;
+        setFormData({
+            ...formData,
+            [name]: name === 'catalogue_file' ? files[0] : value,
+        });
+    };
+
+    const handleDelete = async (catalogues_id) => {
+        const confirmed = window.confirm('Are you sure you want to delete this Catalogue?');
+
+        if (!confirmed) {
+            swal.fire({
+                icon: 'info',
+                title: 'Operation Aborted',
+                text: 'Deletion has been canceled.',
+            });
+            return;
+        }
+
+        try {
+            await deleteCatalogues(catalogues_id);
+            await fetchAllCatalogues();
+            swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'News deleted successfully!',
+            });
+        } catch (error) {
+            swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to delete News Article. Please try again.',
+            });
+        }
+    };
+
     return (
         <div>
             <HeaderNav/>
@@ -87,14 +183,89 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
                 <div className="container-fluid py-5">
                     <div className="d-sm-flex justify-content-between">
                         <div className="dropdown d-inline align-center">
-                            <Link to="/addcustomer" className="btn btn-outline-dark">
+                            <button 
+                                type="button" 
+                                className="btn btn-outline-dark"
+                                onClick={openModal}
+                            >
                                 <i className="fi fi-br-file-user"></i> New Catalogue
-                            </Link>
+                            </button>
+                            {isModalOpen && (
+                                <div
+                                    className="modal fade show"
+                                    id="modal-form"
+                                    tabIndex="-1"
+                                    role="dialog"
+                                    aria-modal="true"
+                                    style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                                    onClick={closeModal}
+                                >
+                                    <div
+                                        className="modal-dialog modal-dialog-centered modal-md"
+                                        role="document"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="modal-content">
+                                            <div className="modal-body p-0">
+                                                <div className="card card-plain">
+                                                    <div className="card-header pb-0 text-left">
+                                                        <span className="close" onClick={closeModal}>
+                                                        &times;
+                                                        </span>
+                                                        <h3 className="font-weight-bolder text-dark text-gradient">
+                                                        Add Catalogue
+                                                        </h3>
+                                                    </div>
+                                                    <div className="card-body">
+                                                        <form role="form text-left" ref={formRef} method="POST" onSubmit={handleFormSubmit}>
+                                                            <label>Catalogue Name</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="catalogue_name"
+                                                                    placeholder="Catalogue Name"
+                                                                    value={formData.catalogue_name}
+                                                                    onChange={(e) => setFormData({ ...formData, catalogue_name: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <label>Catalogue File</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="file"
+                                                                    name="catalogue_file"
+                                                                    className="form-control"
+                                                                    onChange={handleInputChange}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            
+                                                            <div className="text-center">
+                                                                <button
+                                                                    type="submit"
+                                                                    className="btn btn-round bg-gradient-dark btn-lg w-100 mt-4 mb-0"
+                                                                    disabled={isButtonDisabled}
+                                                                >
+                                                                    {buttonText}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div className="card-footer text-center pt-0 px-lg-2 px-1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="d-flex">
                            
                         </div>
                     </div>
+
                     <div className="row mt-2">
                         <div className="col-12">
                             <div className="card">
@@ -129,12 +300,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Image
-                                                                </a>
-                                                            </th>
-                                                            <th data-sortable="" style={{ width: '10.6114%' }}>
-                                                                <a href="#" className="dataTable-sorter text-dark">
-                                                                    Body
+                                                                    File
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
@@ -186,17 +352,6 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues }) => {
                                                                                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                                                                             </button>
                                                                             <span>Download</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className="text-xs font-weight-bold">
-                                                                        <div className="d-flex align-items-center">
-                                                                            <button
-                                                                                className="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => EditCatalogues(catalogues.id)}
-                                                                            >
-                                                                                <i className="fa-regular fa-pen-to-square" aria-hidden="true"></i>
-                                                                            </button>
-                                                                            <span>Edit</span>
                                                                         </div>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
@@ -284,7 +439,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCatalogues: () => dispatch(fetchAllCatalogues()),
-        deletecatalogues: (catalogues_id) => dispatch(deletecatalogues(catalogues_id)),
+        saveCatalogues: (formData) => dispatch(saveCatalogues(formData)),
+        deletecatalogues: (catalogues_id) => dispatch(deletecatalogues(catalogues_id)), 
+        deleteCatalogues: (catalogues_id) => dispatch(deleteCatalogues(catalogues_id)),
     };
 };
 
