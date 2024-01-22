@@ -44,6 +44,12 @@ class Config{
             icons: "fi fi-br-file-user text-lg text-white"
         },
         {
+            index: "10",
+            title: "Shukran Magazines",
+            url: "/admin/products",
+            icons: "fa-solid fa-file-lines  text-lg text-white"
+        },
+        {
             index: "7",
             title: "Popes Prayer Intentions",
             url: "/admin/popes-prayer-intentions",

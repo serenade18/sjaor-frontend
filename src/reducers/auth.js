@@ -29,6 +29,20 @@ import {
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
 
+    // cATEGORIES
+    DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS, DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+    DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS, DOCUMENT_CATEGORY_FETCH_DETAILS_FAIL,
+    DOCUMENT_CATEGORY_DELETE_SUCCESS, DOCUMENT_CATEGORY_DELETE_FAIL, DOCUMENT_CATEGORY_UPDATE_LIST,
+    SAVE_DOCUMENT_CATEGORY_SUCCESS, SAVE_DOCUMENT_CATEGORY_FAIL,
+    EDIT_DOCUMENT_CATEGORY_SUCCESS, EDIT_DOCUMENT_CATEGORY_FAIL,
+
+    // DOCUMENTS
+    DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
+    DOCUMENTS_FETCH_DETAILS_SUCCESS, DOCUMENTS_FETCH_DETAILS_FAIL,
+    DOCUMENTS_DELETE_SUCCESS, DOCUMENTS_DELETE_FAIL, DOCUMENTS_UPDATE_LIST,
+    SAVE_DOCUMENTS_SUCCESS, SAVE_DOCUMENTS_FAIL,
+    EDIT_DOCUMENTS_SUCCESS, EDIT_DOCUMENTS_FAIL,
+
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
 
@@ -42,7 +56,10 @@ const initialState = {
     news: [],
     newsDetails: null,
     catalogues: [],
-    catalogueDetails: null
+    catalogueDetails: null,
+    documents: [],
+    documentDetails: null,
+    documentCategories: []
 }
 
 export default function (state = initialState, action) {
@@ -237,9 +254,8 @@ export default function (state = initialState, action) {
             return {
                 ...state,
             };    
-          
-            
-        // News
+                    
+        // cATALOGUES
 
         case SAVE_CATALOGUES_SUCCESS:
             return {
@@ -309,6 +325,154 @@ export default function (state = initialState, action) {
             };
 
         case CATALOGUES_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
+            // DOCUMENTS
+
+        case SAVE_DOCUMENTS_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data,
+            };
+
+        case SAVE_DOCUMENTS_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_DOCUMENTS_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data,
+            };
+
+        case EDIT_DOCUMENTS_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_DOCUMENTS_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case DOCUMENTS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data, // Store the fetched customer data
+            };
+
+        case DOCUMENTS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                documents: [], // Handle the failure case
+            };
+
+        case DOCUMENTS_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                documentDetails: payload, // Store the fetched DOCUMENTS data
+            };
+
+        case DOCUMENTS_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                documentDetails: [], // Store the fetched DOCUMENTS data
+            };   
+        
+        case DOCUMENTS_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedDocuments = state.documents.filter((documents) => documents.id !== payload);
+            return {
+                ...state,
+                documents: updatedDocuments,
+            };
+
+        case DOCUMENTS_DELETE_SUCCESS: 
+            const updatedDocument = state.documents.filter(documents => documents.id !== payload.data);
+
+            return {
+                ...state,
+                documents: updatedDocument,
+            };
+
+        case DOCUMENTS_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
+             // DOCUMENTS
+
+        case SAVE_DOCUMENT_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data,
+            };
+
+        case SAVE_DOCUMENT_CATEGORY_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_DOCUMENT_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data,
+            };
+
+        case EDIT_DOCUMENT_CATEGORY_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_DOCUMENT_CATEGORY_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data, // Store the fetched customer data
+            };
+
+        case DOCUMENT_CATEGORY_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                documents: [], // Handle the failure case
+            };
+
+        case DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                documentDetails: payload, // Store the fetched DOCUMENTS data
+            };
+
+        case DOCUMENT_CATEGORY_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                documentDetails: [], // Store the fetched DOCUMENTS data
+            };   
+        
+        case DOCUMENT_CATEGORY_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedDocumentCategories = state.documents.filter((documents) => documents.id !== payload);
+            return {
+                ...state,
+                documents: updatedDocumentCategories,
+            };
+
+        case DOCUMENT_CATEGORY_DELETE_SUCCESS: 
+            const updatedDocumentCategory = state.documents.filter(documents => documents.id !== payload.data);
+
+            return {
+                ...state,
+                documents: updatedDocumentCategory,
+            };
+
+        case DOCUMENT_CATEGORY_DELETE_FAIL:
             return {
                 ...state,
             };    

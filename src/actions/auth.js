@@ -24,12 +24,19 @@ import {
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
 
-    // Catalogues
+    // CATALOGUES
     CATALOGUES_FETCH_ALL_SUCCESS, CATALOGUES_FETCH_ALL_FAIL,
     CATALOGUES_FETCH_DETAILS_SUCCESS, CATALOGUES_FETCH_DETAILS_FAIL,
     CATALOGUES_DELETE_SUCCESS, CATALOGUES_DELETE_FAIL, CATALOGUES_UPDATE_LIST,
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
+
+    // DOCUMENTS
+    DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
+    DOCUMENTS_FETCH_DETAILS_SUCCESS, DOCUMENTS_FETCH_DETAILS_FAIL,
+    DOCUMENTS_DELETE_SUCCESS, DOCUMENTS_DELETE_FAIL, DOCUMENTS_UPDATE_LIST,
+    SAVE_DOCUMENTS_SUCCESS, SAVE_DOCUMENTS_FAIL,
+    EDIT_DOCUMENTS_SUCCESS, EDIT_DOCUMENTS_FAIL,
 
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
@@ -799,6 +806,166 @@ try {
 } catch (error) {
   dispatch({
     type: EDIT_CATALOGUES_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
+};
+
+// Api Handler for Documents
+
+export const fetchAllDocuments = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const documentsData = response.data;
+      dispatch({
+        type: DOCUMENTS_FETCH_ALL_SUCCESS,
+        payload: documentsData,
+      });
+    } else {
+      dispatch({
+        type: DOCUMENTS_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching DOCUMENTS data:", error);
+    dispatch({
+      type: DOCUMENTS_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteDocuments = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: DOCUMENTS_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: DOCUMENTS_UPDATE_LIST, payload: id }); // Send the deleted DOCUMENTS ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: DOCUMENTS_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: DOCUMENTS_DELETE_FAIL });
+  }
+};
+
+export const fetchDocumentsDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const documentsData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: DOCUMENTS_FETCH_DETAILS_SUCCESS,
+        payload: documentsData,
+      });
+      return documentsData
+    } else {
+      dispatch({
+        type: DOCUMENTS_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching DOCUMENTS data:", error);
+    dispatch({
+      type: DOCUMENTS_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveDocuments= (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_DOCUMENTS_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_DOCUMENTS_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editDocuments = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/documents/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const documentsData = response.data;
+      dispatch({
+          type: EDIT_DOCUMENTS_SUCCESS,
+          payload: documentsData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_DOCUMENTS_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_DOCUMENTS_FAIL, // Change this to the correct action type
   });
   return { success: false, error: 'Network error' };
 }

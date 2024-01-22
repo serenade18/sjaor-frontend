@@ -440,7 +440,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCatalogues: () => dispatch(fetchAllCatalogues()),
         saveCatalogues: (formData) => dispatch(saveCatalogues(formData)),
-        deletecatalogues: (catalogues_id) => dispatch(deletecatalogues(catalogues_id)), 
         deleteCatalogues: (catalogues_id) => dispatch(deleteCatalogues(catalogues_id)),
     };
 };
