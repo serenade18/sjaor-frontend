@@ -38,6 +38,14 @@ import {
     SAVE_DOCUMENTS_SUCCESS, SAVE_DOCUMENTS_FAIL,
     EDIT_DOCUMENTS_SUCCESS, EDIT_DOCUMENTS_FAIL,
 
+    // cATEGORIES
+    DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS, DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+    DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS, DOCUMENT_CATEGORY_FETCH_DETAILS_FAIL,
+    DOCUMENT_CATEGORY_DELETE_SUCCESS, DOCUMENT_CATEGORY_DELETE_FAIL, DOCUMENT_CATEGORY_UPDATE_LIST,
+    SAVE_DOCUMENT_CATEGORY_SUCCESS, SAVE_DOCUMENT_CATEGORY_FAIL,
+    EDIT_DOCUMENT_CATEGORY_SUCCESS, EDIT_DOCUMENT_CATEGORY_FAIL,
+    DOCUMENT_ONLY_FETCH_SUCCESS, DOCUMENT_ONLY_FETCH_FAIL,
+
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
 
@@ -913,24 +921,25 @@ try {
           }
       );
 
-    if (response.status === 201) {
-        const data = await res.json();
+    if (res.status === 201) {
+        const data = await res.data;
         dispatch({
           type: SAVE_DOCUMENTS_SUCCESS,
           payload: data
         });
         console.log(data)
-        return { success: true, data };
+        return data;
     } else {
-        const error = await res.json();
         dispatch({
           type: SAVE_DOCUMENTS_FAIL,
-          payload: error
         });
-        return { success: false, error };
     }
 } catch (error) {
-    return { success: false, error: 'Network error' };
+  console.error('Error posting Docs:', error);
+  dispatch({
+    type: SAVE_DOCUMENTS_FAIL,
+  });
+  throw error;
 }
 }  
 
@@ -971,3 +980,35 @@ try {
 }
 };
 
+//Api handler for document  category
+
+export const fetchDocumentOnly = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch batch data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documentonly/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const categoryData = response.data;
+      dispatch({
+        type: DOCUMENT_ONLY_FETCH_SUCCESS,
+        payload: categoryData,
+      });
+      return categoryData;
+    } else {
+      dispatch({
+        type: DOCUMENT_ONLY_FETCH_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching category data:", error);
+    dispatch({
+      type: DOCUMENT_ONLY_FETCH_FAIL,
+    });
+  }
+};

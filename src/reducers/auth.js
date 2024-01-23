@@ -35,6 +35,7 @@ import {
     DOCUMENT_CATEGORY_DELETE_SUCCESS, DOCUMENT_CATEGORY_DELETE_FAIL, DOCUMENT_CATEGORY_UPDATE_LIST,
     SAVE_DOCUMENT_CATEGORY_SUCCESS, SAVE_DOCUMENT_CATEGORY_FAIL,
     EDIT_DOCUMENT_CATEGORY_SUCCESS, EDIT_DOCUMENT_CATEGORY_FAIL,
+    DOCUMENT_ONLY_FETCH_SUCCESS, DOCUMENT_ONLY_FETCH_FAIL,
 
     // DOCUMENTS
     DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
@@ -420,6 +421,18 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 documents: payload.data,
+            };
+
+        case DOCUMENT_ONLY_FETCH_SUCCESS:
+            return {
+                ...state,
+                documents: payload.data, // Store the fetched documents data
+            };
+
+        case DOCUMENT_ONLY_FETCH_FAIL:
+            return {
+                ...state,
+                documents: [], // Handle the failure case
             };
 
         case EDIT_DOCUMENT_CATEGORY_FAIL:

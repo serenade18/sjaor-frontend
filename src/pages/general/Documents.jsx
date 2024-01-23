@@ -3,9 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
-import { fetchAllDocuments } from '../../actions/auth';
+import { fetchAllDocuments, saveDocuments, deleteDocuments, fetchDocumentOnly } from '../../actions/auth';
+import Select from 'react-select';
+import { toast } from 'react-toastify';
 
-const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents }) => {
+const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocuments, deleteDocuments, fetchDocumentOnly }) => {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(1);
     const focumentsPerPage = 24;
@@ -61,11 +63,72 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents }) => {
         startPage + maxPagesDisplayed - 1
     );
 
+    const [formData, setFormData] = useState({
+        document_name: '',
+        document_file: null,
+        document_category: ''
+    })
+
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    
+    const [buttonText, setButtonText] = useState('Add Document'); // Initial button text
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [isViewModalOpen, setViewModalOpen] = useState(false);
+
+    const openModal = () => {
+        setModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setModalOpen(false);
+        setFormData({
+            document_name: '',
+            document_file: null,
+            document_category: ''
+        });
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        const formDataToSend = new FormData();
+
+        formDataToSend.append('document_name', formData.document_name);
+        formDataToSend.append('document_file', formData.document_file);
+        formDataToSend.append('document_category', formData.document_category);
+
+        try {
+            const response = await saveDocuments(formDataToSend);
+            console.log(response);
+
+            // console.log('News posted successfully');
+            // Show success toast
+            toast.success('Document posted successfully', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
+            fetchAllDocuments()
+
+        } catch (error) {
+            console.error('Error posting play', error.message);
+            // Show error toast
+            toast.error('Error posting play. Please try again.', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
+            return;
+        }
+    };
+
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
-            [name]: name === 'catalogue_file' ? files[0] : value,
+            [name]: name === 'document_file' ? files[0] : value,
         });
     };
 
@@ -82,7 +145,7 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents }) => {
         }
 
         try {
-            await deleteCatalogues(documents_id);
+            await deleteDocuments(documents_id);
             await fetchAllDocuments();
             swal.fire({
                 icon: 'success',
@@ -119,6 +182,36 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents }) => {
         }
     };
 
+    const [selectedCategoryOptions, setSelectedCategoryOption] = useState(null);
+    const [categoryOptions, setCategoryOptions] = useState([]);
+
+    // Update useEffect for fetching custome data
+    useEffect(() => {
+        const fetchCategoryData = async () => {
+            try {
+                const categories = await fetchDocumentOnly();
+                console.log(categories)
+                setCategoryOptions(categories);
+            } catch (error) {
+                console.error('Error fetching batch data:', error);
+            }
+        };
+
+        fetchCategoryData();
+    }, [fetchDocumentOnly]);
+
+    const handleCategorySelect = (selectedOption) => {
+        setSelectedCategoryOption(selectedOption);
+        if (selectedOption) {
+            setFormData({
+                ...formData,
+                document_category: selectedOption.value, // Assign the selected batch's id to document_category
+            });
+            setSelectedCategoryOption(selectedOption);
+        }
+    };
+    
+
 
     return (
         <div>
@@ -127,9 +220,98 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents }) => {
                 <div className="container-fluid py-5">
                     <div className="d-sm-flex justify-content-between">
                         <div className="dropdown d-inline align-center">
-                            <button type="button" className="btn btn-outline-dark">
+                            <button 
+                                type="button" 
+                                className="btn btn-outline-dark"
+                                onClick={openModal}
+                            >
                                 <i className="fi fi-tr-memo-circle-check"></i> New Document
                             </button>
+                            {isModalOpen && (
+                                <div
+                                    className="modal fade show"
+                                    id="modal-form"
+                                    tabIndex="-1"
+                                    role="dialog"
+                                    aria-modal="true"
+                                    style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                                    onClick={closeModal}
+                                >
+                                    <div
+                                        className="modal-dialog modal-dialog-centered modal-md"
+                                        role="document"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="modal-content">
+                                            <div className="modal-body p-0">
+                                                <div className="card card-plain">
+                                                    <div className="card-header pb-0 text-left">
+                                                        <span className="close" onClick={closeModal}>
+                                                        &times;
+                                                        </span>
+                                                        <h3 className="font-weight-bolder text-dark text-gradient">
+                                                        Add Document
+                                                        </h3>
+                                                    </div>
+                                                    <div className="card-body">
+                                                        <form role="form text-left" ref={formRef} method="POST" onSubmit={handleFormSubmit}>
+                                                            <label>Document Name</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="document_name"
+                                                                    placeholder="Document Name"
+                                                                    value={formData.document_name}
+                                                                    onChange={(e) => setFormData({ ...formData, document_name: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <label>Document File</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="file"
+                                                                    name="document_file"
+                                                                    className="form-control"
+                                                                    onChange={handleInputChange}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <label>Category</label>
+                                                            <div className="input-group mb-3">
+                                                                <Select
+                                                                    id="document_category"
+                                                                    name="document_category"
+                                                                    className="form-control"
+                                                                    value={selectedCategoryOptions}
+                                                                    onChange={handleCategorySelect}
+                                                                    options={categoryOptions && categoryOptions.map((doucument) => ({
+                                                                        value: doucument.id,
+                                                                        label: doucument.category,
+                                                                    }))}
+                                                                    placeholder="--- Browse Category ---"
+                                                                    isClearable
+                                                                />
+                                                            </div>
+                                                            <div className="text-center">
+                                                                <button
+                                                                    type="submit"
+                                                                    className="btn btn-round bg-gradient-dark btn-lg w-100 mt-4 mb-0"
+                                                                    disabled={isButtonDisabled}
+                                                                >
+                                                                    {buttonText}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div className="card-footer text-center pt-0 px-lg-2 px-1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="d-flex">
                            <button className="btn btn-outline-success">
@@ -321,6 +503,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllDocuments: () => dispatch(fetchAllDocuments()),
+        fetchDocumentOnly: () => dispatch(fetchDocumentOnly()),
         saveDocuments: (formData) => dispatch(saveDocuments(formData)),
         deleteDocuments: (documents_id) => dispatch(deleteDocuments(documents_id)),
     };
