@@ -29,13 +29,20 @@ import {
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
 
-    // cATEGORIES
+    // CATEGORIES
     DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS, DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
     DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS, DOCUMENT_CATEGORY_FETCH_DETAILS_FAIL,
     DOCUMENT_CATEGORY_DELETE_SUCCESS, DOCUMENT_CATEGORY_DELETE_FAIL, DOCUMENT_CATEGORY_UPDATE_LIST,
     SAVE_DOCUMENT_CATEGORY_SUCCESS, SAVE_DOCUMENT_CATEGORY_FAIL,
     EDIT_DOCUMENT_CATEGORY_SUCCESS, EDIT_DOCUMENT_CATEGORY_FAIL,
     DOCUMENT_ONLY_FETCH_SUCCESS, DOCUMENT_ONLY_FETCH_FAIL,
+
+    // SHUKRAN
+    SHUKRAN_FETCH_ALL_SUCCESS, SHUKRAN_FETCH_ALL_FAIL,
+    SHUKRAN_FETCH_DETAILS_SUCCESS, SHUKRAN_FETCH_DETAILS_FAIL,
+    SHUKRAN_DELETE_SUCCESS, SHUKRAN_DELETE_FAIL, SHUKRAN_UPDATE_LIST,
+    SAVE_SHUKRAN_SUCCESS, SAVE_SHUKRAN_FAIL,
+    EDIT_SHUKRAN_SUCCESS, EDIT_SHUKRAN_FAIL,
 
     // DOCUMENTS
     DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
@@ -60,7 +67,9 @@ const initialState = {
     catalogueDetails: null,
     documents: [],
     documentDetails: null,
-    documentCategories: []
+    documentCategories: [],
+    shukran: [],
+    shukranDetails: null
 }
 
 export default function (state = initialState, action) {
@@ -256,7 +265,7 @@ export default function (state = initialState, action) {
                 ...state,
             };    
                     
-        // cATALOGUES
+        // CATALOGUES
 
         case SAVE_CATALOGUES_SUCCESS:
             return {
@@ -326,6 +335,80 @@ export default function (state = initialState, action) {
             };
 
         case CATALOGUES_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
+            // SHUKRAN
+
+        case SAVE_SHUKRAN_SUCCESS:
+            return {
+                ...state,
+                shukran: payload.data,
+            };
+
+        case SAVE_SHUKRAN_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_SHUKRAN_SUCCESS:
+            return {
+                ...state,
+                shukran: payload.data,
+            };
+
+        case EDIT_SHUKRAN_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_SHUKRAN_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case SHUKRAN_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                shukran: payload.data, // Store the fetched customer data
+            };
+
+        case SHUKRAN_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                shukran: [], // Handle the failure case
+            };
+
+        case SHUKRAN_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                shukranDetails: payload, // Store the fetched SHUKRAN data
+            };
+
+        case SHUKRAN_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                shukranDetails: [], // Store the fetched SHUKRAN data
+            };   
+        
+        case SHUKRAN_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedShukran = state.shukran.filter((shukran) => shukran.id !== payload);
+            return {
+                ...state,
+                shukran: updatedShukran,
+            };
+
+        case SHUKRAN_DELETE_SUCCESS: 
+            const updatedShukrans = state.shukran.filter(shukran => shukran.id !== payload.data);
+
+            return {
+                ...state,
+                shukran: updatedShukrans,
+            };
+
+        case SHUKRAN_DELETE_FAIL:
             return {
                 ...state,
             };    

@@ -31,6 +31,13 @@ import {
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
 
+    // SHUKRAN
+    SHUKRAN_FETCH_ALL_SUCCESS, SHUKRAN_FETCH_ALL_FAIL,
+    SHUKRAN_FETCH_DETAILS_SUCCESS, SHUKRAN_FETCH_DETAILS_FAIL,
+    SHUKRAN_DELETE_SUCCESS, SHUKRAN_DELETE_FAIL, SHUKRAN_UPDATE_LIST,
+    SAVE_SHUKRAN_SUCCESS, SAVE_SHUKRAN_FAIL,
+    EDIT_SHUKRAN_SUCCESS, EDIT_SHUKRAN_FAIL,
+
     // DOCUMENTS
     DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
     DOCUMENTS_FETCH_DETAILS_SUCCESS, DOCUMENTS_FETCH_DETAILS_FAIL,
@@ -1076,4 +1083,164 @@ export const fetchAllCategory = () => async (dispatch, getState) => {
       type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
     });
   }
+};
+
+// Api Handler for Catalogues
+
+export const fetchAllShukran = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/shukran/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const shukranData = response.data;
+      dispatch({
+        type: SHUKRAN_FETCH_ALL_SUCCESS,
+        payload: shukranData,
+      });
+    } else {
+      dispatch({
+        type: SHUKRAN_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching SHUKRAN data:", error);
+    dispatch({
+      type: SHUKRAN_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteShukran = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/shukran/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: SHUKRAN_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: SHUKRAN_UPDATE_LIST, payload: id }); // Send the deleted SHUKRAN ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: SHUKRAN_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: SHUKRAN_DELETE_FAIL });
+  }
+};
+
+export const fetchShukranDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/shukran/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const shukranData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: SHUKRAN_FETCH_DETAILS_SUCCESS,
+        payload: shukranData,
+      });
+      return shukranData
+    } else {
+      dispatch({
+        type: SHUKRAN_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching SHUKRAN data:", error);
+    dispatch({
+      type: SHUKRAN_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveShukran = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/shukran/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_SHUKRAN_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_SHUKRAN_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editShukran = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/shukran/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const shukranData = response.data;
+      dispatch({
+          type: EDIT_SHUKRAN_SUCCESS,
+          payload: shukranData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_SHUKRAN_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_SHUKRAN_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
 };

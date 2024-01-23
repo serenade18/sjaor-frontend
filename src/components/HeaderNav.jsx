@@ -21,16 +21,9 @@ function HeaderNav({ user }) {
       '/admin/ignatian-thoughts': 'Ignatian Thoughts',
       '/admin/archivium': 'Archivium',
       '/admin/products': 'Products',
+      '/admin/shukran': 'Shukran Magazine',
       '/admin/addnews': 'Add News',
       '/admin/addnews': 'Add News',
-      '/admin/addnews': 'Add News',
-      '/balance': 'Balance',
-      '/profit': 'Profit',
-      '/paidfarmers': 'Farmers Graph',
-      '/overheads': 'Over Heads',
-      '/kilos': 'Kilos',
-      '/discount': 'Discount',
-      '/total': 'Payment Breakdown'
     };
 
     if (id) {

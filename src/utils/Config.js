@@ -46,7 +46,7 @@ class Config{
         {
             index: "10",
             title: "Shukran Magazines",
-            url: "/admin/products",
+            url: "/admin/shukran",
             icons: "fa-solid fa-file-lines  text-lg text-white"
         },
         {

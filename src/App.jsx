@@ -28,6 +28,7 @@ const Events = lazy(() => import('./pages/events/Events'));
 const Adusums = lazy(() => import('./pages/general/Adusums'));
 const Documents = lazy(() => import('./pages/general/Documents'));
 const Catalogues = lazy(() => import('./pages/general/Catalogues'));
+const Shukran = lazy(() => import('./pages/general/Shukran'));
 const IgnatianThoughts = lazy(() => import('./pages/general/IgnatianThoughts'));
 const Archivium = lazy(() => import('./pages/archivium/Archivium'));
 const PopesPrayerIntentions = lazy(() => import('./pages/popes-intentions/PopesPrayerIntentions'));
@@ -62,11 +63,13 @@ function App() {
 
           <Layout>
             <Routes>
+              {/* General Pages */}
               <Route exact path="/admin/home" element={<Home />}/>
               <Route exact path="/admin/users" element={<Users />}/>
               <Route exact path="/admin/adusums" element={<Adusums />}/>
               <Route exact path="/admin/documents" element={<Documents />}/>
               <Route exact path="/admin/catalogues" element={<Catalogues />}/>
+              <Route exact path="/admin/shukran" element={<Shukran />}/>
               <Route exact path="/admin/ignatian-thoughts" element={<IgnatianThoughts />}/>
 
               {/* News */}

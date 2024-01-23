@@ -4,12 +4,12 @@ import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-import { fetchAllCatalogues, saveCatalogues, deleteCatalogues } from '../../actions/auth'
+import { fetchAllShukran, saveShukran, deleteShukran } from '../../actions/auth'
 
-const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatalogues, deleteCatalogues }) => {
+const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, deleteShukran }) => {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(1);
-    const cataloguesPerPage = 24;
+    const shukranPerPage = 24;
     const maxPagesDisplayed = 5;
     const { id } = useParams();
     const formRef = useRef(null);
@@ -30,11 +30,11 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     useEffect(() => {
         if (isAuthenticated) {
             // Fetch customer data only if authenticated
-                fetchAllCatalogues();
+                fetchAllShukran();
         } else {
             // navigate('/');
         }
-    }, [isAuthenticated, navigate, fetchAllCatalogues]);
+    }, [isAuthenticated, navigate, fetchAllShukran]);
 
     if (!isAuthenticated) {
         navigate('/');
@@ -42,15 +42,15 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredCatalogues = catalogues
-    ? catalogues.filter((catalogues) =>
-          catalogues.catalogue_name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredShukran = shukran
+    ? shukran.filter((shukran) =>
+          shukran.shukran_name && shukran.shukran_name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
-    const indexOfLastCatalogues = currentPage * cataloguesPerPage;
-    const indexOfFirstCatalogues = indexOfLastCatalogues - cataloguesPerPage;
-    const currentCatalogues = filteredCatalogues.slice(indexOfFirstCatalogues, indexOfLastCatalogues);
+    const indexOfLastShukran = currentPage * shukranPerPage;
+    const indexOfFirstShukran = indexOfLastShukran - shukranPerPage;
+    const currentShukran = filteredShukran.slice(indexOfFirstShukran, indexOfLastShukran);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -58,7 +58,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
     const startPage = Math.max(1, currentPage - Math.floor(maxPagesDisplayed / 2));
     const endPage = Math.min(
-        Math.ceil(filteredCatalogues.length / cataloguesPerPage),
+        Math.ceil(filteredShukran.length / shukranPerPage),
         startPage + maxPagesDisplayed - 1
     );
 
@@ -71,12 +71,12 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     // Function to trigger pdf download
     const downloadCatalogue = (catalogueId) => {
         // Find the selected catalogue using the ID
-        const selectedCatalogue = catalogues.find(catalogue => catalogue.id === catalogueId);
+        const selectedCatalogue = shukran.find(catalogue => catalogue.id === catalogueId);
 
         // Ensure the catalogue is found
         if (selectedCatalogue) {
-            // Use the catalogue_file to initiate the download
-            window.open(selectedCatalogue.catalogue_file, '_blank');
+            // Use the shukran_file to initiate the download
+            window.open(selectedCatalogue.shukran_file, '_blank');
         } else {
             // Handle the case where the catalogue is not found
             console.error('Catalogue not found');
@@ -84,13 +84,14 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     };
 
     const [formData, setFormData] = useState({
-        catalogue_name: '',
-        catalogue_file: null,
+        shukran_name: '',
+        shukran_year: '',
+        shukran_file: null,
     })
 
     const [submitSuccess, setSubmitSuccess] = useState(false);
     
-    const [buttonText, setButtonText] = useState('Add Catalogue'); // Initial button text
+    const [buttonText, setButtonText] = useState('Add Shukran'); // Initial button text
     const [isButtonDisabled, setButtonDisabled] = useState(false);
 
     const [isModalOpen, setModalOpen] = useState(false);
@@ -102,8 +103,9 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     const closeModal = () => {
         setModalOpen(false);
         setFormData({
-            catalogue_name: '',
-            catalogue_file: null,
+            shukran_name: '',
+            shukran_year: '',
+            shukran_file: null,
         });
     };
 
@@ -112,21 +114,22 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
         const formDataToSend = new FormData();
 
-        formDataToSend.append('catalogue_name', formData.catalogue_name);
-        formDataToSend.append('catalogue_file', formData.catalogue_file);
+        formDataToSend.append('shukran_name', formData.shukran_name);
+        formDataToSend.append('shukran_year', formData.shukran_year);
+        formDataToSend.append('shukran_file', formData.shukran_file);
 
         try {
-            const response = await saveCatalogues(formDataToSend);
+            const response = await saveShukran(formDataToSend);
             console.log(response);
 
             // console.log('News posted successfully');
             // Show success toast
-            toast.success('Catalogue added successfully', {
+            toast.success('Shukran added successfully', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-            fetchAllCatalogues();
+            fetchAllShukran();
 
         } catch (error) {
             console.error('Error posting play', error.message);
@@ -144,11 +147,11 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
-            [name]: name === 'catalogue_file' ? files[0] : value,
+            [name]: name === 'shukran_file' ? files[0] : value,
         });
     };
 
-    const handleDelete = async (catalogues_id) => {
+    const handleDelete = async (shukran_id) => {
         const confirmed = window.confirm('Are you sure you want to delete this Catalogue?');
 
         if (!confirmed) {
@@ -161,8 +164,8 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
         }
 
         try {
-            await deleteCatalogues(catalogues_id);
-            await fetchAllCatalogues();
+            await deleteShukran(shukran_id);
+            await fetchAllShukran();
             swal.fire({
                 icon: 'success',
                 title: 'Success',
@@ -189,7 +192,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                 className="btn btn-outline-dark"
                                 onClick={openModal}
                             >
-                                <i className="fi fi-br-file-user"></i> New Catalogue
+                                <i className="fi fi-ss-newspaper-open"></i> New Shukran Issue
                             </button>
                             {isModalOpen && (
                                 <div
@@ -219,15 +222,27 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                     </div>
                                                     <div className="card-body">
                                                         <form role="form text-left" ref={formRef} method="POST" onSubmit={handleFormSubmit}>
-                                                            <label>Catalogue Name</label>
+                                                            <label>Shukran Name</label>
                                                             <div className="input-group mb-3">
                                                                 <input
                                                                     type="text"
                                                                     className="form-control"
-                                                                    name="catalogue_name"
-                                                                    placeholder="Catalogue Name"
-                                                                    value={formData.catalogue_name}
-                                                                    onChange={(e) => setFormData({ ...formData, catalogue_name: e.target.value })}
+                                                                    name="shukran_name"
+                                                                    placeholder="Shukran Name"
+                                                                    value={formData.shukran_name}
+                                                                    onChange={(e) => setFormData({ ...formData, shukran_name: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <label>Shukran Year</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="shukran_year"
+                                                                    placeholder="Shukran Name"
+                                                                    value={formData.shukran_year}
+                                                                    onChange={(e) => setFormData({ ...formData, shukran_year: e.target.value })}
                                                                     required
                                                                 />
                                                             </div>
@@ -235,7 +250,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                             <div className="input-group mb-3">
                                                                 <input
                                                                     type="file"
-                                                                    name="catalogue_file"
+                                                                    name="shukran_file"
                                                                     className="form-control"
                                                                     onChange={handleInputChange}
                                                                     required
@@ -285,7 +300,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                             </div>
                                         </div>
                                         <div className="dataTable-container">
-                                            {filteredCatalogues.length > 0 ? (
+                                            {filteredShukran.length > 0 ? (
                                                 <table className="table table-flush dataTable-table" id="datatable-search">
                                                     <thead className="thead-light">
                                                         <tr>
@@ -297,6 +312,11 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                             <th data-sortable="" style={{ width: '23%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Name
+                                                                </a>
+                                                            </th>
+                                                            <th data-sortable="" style={{ width: '23%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    Year
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
@@ -323,32 +343,35 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                     </thead>
 
                                                     <tbody>
-                                                        {currentCatalogues.length > 0 ? (
-                                                            currentCatalogues.map((catalogues) => (
-                                                                <tr key={catalogues.id}>
+                                                        {currentShukran.length > 0 ? (
+                                                            currentShukran.map((shukran) => (
+                                                                <tr key={shukran.id}>
                                                                     <td>
                                                                         <div className="d-flex align-items-center">
-                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{catalogues.id}</p>
+                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{shukran.id}</p>
                                                                         </div>
                                                                     </td>
                                                                     <td className="font-weight-bold">
-                                                                        <span className="my-2 text-xs">{catalogues.catalogue_name}</span>
+                                                                        <span className="my-2 text-xs">{shukran.shukran_name}</span>
+                                                                    </td>
+                                                                    <td className="font-weight-bold">
+                                                                        <span className="my-2 text-xs">{shukran.shukran_year}</span>
                                                                     </td>
                                                                     <td className="w-20">
                                                                         <span className="my-2 text-xs">
-                                                                            <i className="fa-regular fa-file-pdf text-lg text-danger"></i> {getFileName(catalogues.catalogue_file)}
+                                                                            <i className="fa-regular fa-file-pdf text-lg text-danger"></i> {getFileName(shukran.shukran_file)}
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">
-                                                                            {new Date(catalogues.added_on).toLocaleString()}
+                                                                            {new Date(shukran.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => downloadCatalogue(catalogues.id)}
+                                                                                onClick={() => downloadCatalogue(shukran.id)}
                                                                             >
                                                                                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                                                                             </button>
@@ -359,7 +382,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => handleDelete(catalogues.id)}
+                                                                                onClick={() => handleDelete(shukran.id)}
                                                                             >
                                                                             <i className="fas fa-times" aria-hidden="true"></i>
                                                                             </button>
@@ -383,7 +406,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                         </div>
 
                                         <div className="dataTable-bottom">
-                                            <div className="dataTable-info">Showing {filteredCatalogues.length} entries</div>
+                                            <div className="dataTable-info">Showing {filteredShukran.length} entries</div>
                                             <nav className="dataTable-pagination">
                                                 <ul className="dataTable-pagination-list">
                                                     <li className="pager">
@@ -405,7 +428,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                             </a>
                                                         </li>
                                                     ))}
-                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredCatalogues.length / cataloguesPerPage) && (
+                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredShukran.length / shukranPerPage) && (
                                                         <li className="pager">
                                                             <a
                                                                 href="#"
@@ -433,16 +456,16 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    catalogues: state.auth.catalogues,
+    shukran: state.auth.shukran,
     user: state.auth.user
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCatalogues: () => dispatch(fetchAllCatalogues()),
-        saveCatalogues: (formData) => dispatch(saveCatalogues(formData)),
-        deleteCatalogues: (catalogues_id) => dispatch(deleteCatalogues(catalogues_id)),
+        fetchAllShukran: () => dispatch(fetchAllShukran()),
+        saveShukran: (formData) => dispatch(saveShukran(formData)),
+        deleteShukran: (shukran_id) => dispatch(deleteShukran(shukran_id)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Catalogues)
+export default connect(mapStateToProps, mapDispatchToProps)(Shukran)
