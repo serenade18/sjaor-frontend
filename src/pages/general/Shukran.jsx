@@ -217,7 +217,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
                                                         &times;
                                                         </span>
                                                         <h3 className="font-weight-bolder text-dark text-gradient">
-                                                        Add Catalogue
+                                                        Add Shukran
                                                         </h3>
                                                     </div>
                                                     <div className="card-body">
@@ -240,7 +240,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
                                                                     type="text"
                                                                     className="form-control"
                                                                     name="shukran_year"
-                                                                    placeholder="Shukran Name"
+                                                                    placeholder="Shukran Year"
                                                                     value={formData.shukran_year}
                                                                     onChange={(e) => setFormData({ ...formData, shukran_year: e.target.value })}
                                                                     required

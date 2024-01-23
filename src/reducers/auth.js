@@ -44,6 +44,9 @@ import {
     SAVE_SHUKRAN_SUCCESS, SAVE_SHUKRAN_FAIL,
     EDIT_SHUKRAN_SUCCESS, EDIT_SHUKRAN_FAIL,
 
+    // IGNATIAN THOUGHTS
+    IGNATIAN_THOUGHTS_FETCH_ALL_SUCCESS, IGNATIAN_THOUGHTS_FETCH_ALL_FAIL,
+
     // DOCUMENTS
     DOCUMENTS_FETCH_ALL_SUCCESS, DOCUMENTS_FETCH_ALL_FAIL,
     DOCUMENTS_FETCH_DETAILS_SUCCESS, DOCUMENTS_FETCH_DETAILS_FAIL,
@@ -69,7 +72,8 @@ const initialState = {
     documentDetails: null,
     documentCategories: [],
     shukran: [],
-    shukranDetails: null
+    shukranDetails: null,
+    ignatian_thoughts: [],
 }
 
 export default function (state = initialState, action) {
@@ -487,7 +491,7 @@ export default function (state = initialState, action) {
                 ...state,
             };    
           
-             // DOCUMENTS
+             // DOCUMENT CATEGORY
 
         case SAVE_DOCUMENT_CATEGORY_SUCCESS:
             return {
@@ -573,6 +577,20 @@ export default function (state = initialState, action) {
                 ...state,
             };    
           
+            // IGNATIAN_THOUGHTS
+
+        case IGNATIAN_THOUGHTS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                ignatian_thoughts: payload.data, // Store the fetched customer data
+            };
+
+        case IGNATIAN_THOUGHTS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                ignatian_thoughts: [], // Handle the failure case
+            };
+
         // Dashboard
         
         case DASHBOARD_FETCH_SUCCESS:
