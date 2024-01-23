@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
-import { fetchAllDocuments, saveDocuments, deleteDocuments, fetchDocumentOnly } from '../../actions/auth';
+import { fetchAllDocuments, saveDocuments, deleteDocuments, fetchDocumentOnly, saveDocumentCategory, fetchAllCategory } from '../../actions/auth';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 
-const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocuments, deleteDocuments, fetchDocumentOnly }) => {
+const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocuments, deleteDocuments, fetchDocumentOnly, saveDocumentCategory }) => {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(1);
     const focumentsPerPage = 24;
@@ -69,10 +69,18 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
         document_category: ''
     })
 
+    const [formData2, setFormData2] = useState({
+        category: ''
+    })
+
     const [submitSuccess, setSubmitSuccess] = useState(false);
     
-    const [buttonText, setButtonText] = useState('Add Document'); // Initial button text
-    const [isButtonDisabled, setButtonDisabled] = useState(false);
+    const [buttonText] = useState('Add Document'); // Initial button text
+    const [isButtonDisabled] = useState(false);
+
+    
+    const [categorybuttonText, setButtonText] = useState('Add Category'); // Initial button text
+    const [iscategoryButtonDisabled, setButtonDisabled] = useState(false);
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -89,6 +97,17 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
             document_category: ''
         });
     };
+
+    const openViewModal = () => {
+        setViewModalOpen(true);
+    };
+    
+    const closeViewModal = () => {
+        setViewModalOpen(false);
+        setFormData2({
+            category: ''
+        });
+    }
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -123,6 +142,34 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
             return;
         }
     };
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            console.log("form data" ,formData2);
+            const response = await saveDocumentCategory(formData2.category);
+            console.log(response);
+
+            if (response.data.error) {
+                toast.error(response.data.message, { toastId: 'error' });
+            } else {
+                toast.success('Category Added Successfully', { toastId: "success" });
+                setTimeout(() => {
+                    setFormData2({
+                        category: ''
+                    });
+                }, 2000)
+                fetchAllCategory();
+                fetchAllDocuments();
+            }
+    
+        } catch (error) {
+            console.log('Error during form submission', error)
+            toast.error('Something went wrong. Check Your Network', { toastId: 'error' });
+           
+        }
+    }
 
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
@@ -210,8 +257,6 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
             setSelectedCategoryOption(selectedOption);
         }
     };
-    
-
 
     return (
         <div>
@@ -314,9 +359,71 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
                             )}
                         </div>
                         <div className="d-flex">
-                           <button className="btn btn-outline-success">
+                           <button 
+                            className="btn btn-outline-success"
+                            onClick={openViewModal}
+                           >
                                 <i className="fa-solid fa-layer-group"></i> Add Category
                            </button>
+                           {isViewModalOpen && (
+                                <div
+                                    className="modal fade show"
+                                    id="modal-form"
+                                    tabIndex="-1"
+                                    role="dialog"
+                                    aria-modal="true"
+                                    style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                                    onClick={closeViewModal}
+                                >
+                                    <div
+                                        className="modal-dialog modal-dialog-centered modal-md"
+                                        role="document"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="modal-content">
+                                            <div className="modal-body p-0">
+                                                <div className="card card-plain">
+                                                    <div className="card-header pb-0 text-left">
+                                                        <span className="close" onClick={closeViewModal}>
+                                                        &times;
+                                                        </span>
+                                                        <h3 className="font-weight-bolder text-dark text-gradient">
+                                                        Add Document Category
+                                                        </h3>
+                                                    </div>
+                                                    <div className="card-body">
+                                                        <form role="form text-left" ref={formRef} method="POST" onSubmit={onSubmit}>
+                                                            <label>Category</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="category"
+                                                                    placeholder="Category Name"
+                                                                    value={formData2.category}
+                                                                    onChange={(e) => setFormData2({ ...formData2, category: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="text-center">
+                                                                <button
+                                                                    type="submit"
+                                                                    className="btn btn-round bg-gradient-dark btn-lg w-100 mt-4 mb-0"
+                                                                    disabled={iscategoryButtonDisabled}
+                                                                >
+                                                                    {categorybuttonText}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div className="card-footer text-center pt-0 px-lg-2 px-1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -505,6 +612,7 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllDocuments: () => dispatch(fetchAllDocuments()),
         fetchDocumentOnly: () => dispatch(fetchDocumentOnly()),
         saveDocuments: (formData) => dispatch(saveDocuments(formData)),
+        saveDocumentCategory: (category) => dispatch(saveDocumentCategory(category)),
         deleteDocuments: (documents_id) => dispatch(deleteDocuments(documents_id)),
     };
 };
