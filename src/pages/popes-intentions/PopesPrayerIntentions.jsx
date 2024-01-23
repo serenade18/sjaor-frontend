@@ -139,17 +139,27 @@ const PopesPrayerIntentions = ({ isAuthenticated, popesPrayers, fetchAllPopesPra
                                                             </th>
                                                             <th data-sortable="" style={{ width: '23%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Title
+                                                                    Prayer Month
+                                                                </a>
+                                                            </th>
+                                                            <th data-sortable="" style={{ width: '23%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    Prayer Name
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Image
+                                                                   Prayer Image
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '10.6114%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Body
+                                                                    Prayer Item
+                                                                </a>
+                                                            </th>
+                                                            <th data-sortable="" style={{ width: '23%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    Prayer Year
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
@@ -180,6 +190,9 @@ const PopesPrayerIntentions = ({ isAuthenticated, popesPrayers, fetchAllPopesPra
                                                                         </div>
                                                                     </td>
                                                                     <td className="font-weight-bold">
+                                                                        <span className="my-2 text-xs">{popesPrayers.prayer_month}</span>
+                                                                    </td>
+                                                                    <td className="font-weight-bold">
                                                                         <span className="my-2 text-xs">{popesPrayers.prayer_name}</span>
                                                                     </td>
                                                                     <td className="w-20">
@@ -190,6 +203,9 @@ const PopesPrayerIntentions = ({ isAuthenticated, popesPrayers, fetchAllPopesPra
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">{popesPrayers.prayer_item}</span>
+                                                                    </td>
+                                                                    <td className="font-weight-bold">
+                                                                        <span className="my-2 text-xs">{popesPrayers.prayer_year}</span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">

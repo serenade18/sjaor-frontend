@@ -16,22 +16,29 @@ const Activate = lazy(() => import('./pages/auth/Activate'));
 const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 const ResetPasswordConfirm = lazy(() => import('./pages/auth/ResetPasswordConfirm'));
 
+// General Routes
 const Home = lazy(() => import('./pages/general/Home'));
 const Users = lazy(() => import('./pages/general/Users'));
+const Documents = lazy(() => import('./pages/general/Documents'));
+const Catalogues = lazy(() => import('./pages/general/Catalogues'));
+const Shukran = lazy(() => import('./pages/general/Shukran'));
+const IgnatianThoughts = lazy(() => import('./pages/general/IgnatianThoughts'));
 
+// News Routes
 const News = lazy(() => import('./pages/news/News'));
 const AddNews = lazy(() => import('./pages/news/AddNews'));
 const EditNews = lazy(() => import('./pages/news/EditNews'));
 const ViewNews = lazy(() => import('./pages/news/ViewNews'));
 
+// Events Routes
 const Events = lazy(() => import('./pages/events/Events'));
+const AddEvents = lazy(() => import('./pages/events/AddEvents'));
+const EditEvents = lazy(() => import('./pages/events/EditEvents'));
+
 const Adusums = lazy(() => import('./pages/general/Adusums'));
-const Documents = lazy(() => import('./pages/general/Documents'));
-const Catalogues = lazy(() => import('./pages/general/Catalogues'));
-const Shukran = lazy(() => import('./pages/general/Shukran'));
-const IgnatianThoughts = lazy(() => import('./pages/general/IgnatianThoughts'));
 const Archivium = lazy(() => import('./pages/archivium/Archivium'));
 
+// Popes Prayers Routes
 const PopesPrayerIntentions = lazy(() => import('./pages/popes-intentions/PopesPrayerIntentions'));
 const AddPopesPrayer = lazy(() => import('./pages/popes-intentions/AddPopesPrayer'));
 const EditPopesPrayers = lazy(() => import('./pages/popes-intentions/EditPopesPrayers'));
@@ -84,6 +91,8 @@ function App() {
 
               {/* Events */}
               <Route exact path="/admin/events" element={<Events/>}/>
+              <Route exact path="/admin/editevent" element={<AddEvents/>}/>
+              <Route exact path="/admin/addevent" element={<EditEvents/>}/>
 
               {/* Archivium */}
               <Route exact path="/admin/archivium" element={<Archivium/>}/>

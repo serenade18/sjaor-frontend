@@ -60,6 +60,14 @@ import {
     EDIT_DOCUMENT_CATEGORY_SUCCESS, EDIT_DOCUMENT_CATEGORY_FAIL,
     DOCUMENT_ONLY_FETCH_SUCCESS, DOCUMENT_ONLY_FETCH_FAIL,
 
+    //EVENT CATEGORIES
+    EVENT_CATEGORY_FETCH_ALL_SUCCESS, EVENT_CATEGORY_FETCH_ALL_FAIL,
+    EVENT_CATEGORY_FETCH_DETAILS_SUCCESS, EVENT_CATEGORY_FETCH_DETAILS_FAIL,
+    EVENT_CATEGORY_DELETE_SUCCESS, EVENT_CATEGORY_DELETE_FAIL, EVENT_CATEGORY_UPDATE_LIST,
+    SAVE_EVENT_CATEGORY_SUCCESS, SAVE_EVENT_CATEGORY_FAIL,
+    EDIT_EVENT_CATEGORY_SUCCESS, EDIT_EVENT_CATEGORY_FAIL,
+    EVENT_ONLY_FETCH_SUCCESS, EVENT_ONLY_FETCH_FAIL,
+
     // IGNATIAN THOUGHTS
     IGNATIAN_THOUGHTS_FETCH_ALL_SUCCESS, IGNATIAN_THOUGHTS_FETCH_ALL_FAIL,
 
@@ -1446,4 +1454,102 @@ try {
   });
   return { success: false, error: 'Network error' };
 }
+};
+
+//Api handler for document  category
+
+export const fetchEventOnly = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch batch data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documentonly/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const categoryData = response.data;
+      dispatch({
+        type: DOCUMENT_ONLY_FETCH_SUCCESS,
+        payload: categoryData,
+      });
+      return categoryData;
+    } else {
+      dispatch({
+        type: DOCUMENT_ONLY_FETCH_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching category data:", error);
+    dispatch({
+      type: DOCUMENT_ONLY_FETCH_FAIL,
+    });
+  }
+};
+
+export const saveEventCategory = (category) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  const config = {
+      headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${access}`,
+      },
+      method: 'POST',
+      body: JSON.stringify({ category })
+  };
+
+  try {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/api/event-category/`, config);
+
+      if (res.ok) {
+          const data = await res.json();
+          dispatch({
+            type: SAVE_DOCUMENT_CATEGORY_SUCCESS,
+            payload: data
+          });
+          return { success: true, data };
+      } else {
+          const error = await res.json();
+          dispatch({
+            type: SAVE_DOCUMENT_CATEGORY_FAIL,
+            payload: error
+          });
+          return { success: false, error };
+      }
+  } catch (error) {
+      return { success: false, error: 'Network error' };
+  }
+}  
+
+export const fetchAllEventCategory = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents-category/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const documentsData = response.data;
+      dispatch({
+        type: DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS,
+        payload: documentsData,
+      });
+    } else {
+      dispatch({
+        type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching DOCUMENTS data:", error);
+    dispatch({
+      type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+    });
+  }
 };

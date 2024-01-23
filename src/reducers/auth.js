@@ -36,7 +36,7 @@ import {
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
 
-    // CATEGORIES
+    //DOCUMENT CATEGORIES
     DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS, DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
     DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS, DOCUMENT_CATEGORY_FETCH_DETAILS_FAIL,
     DOCUMENT_CATEGORY_DELETE_SUCCESS, DOCUMENT_CATEGORY_DELETE_FAIL, DOCUMENT_CATEGORY_UPDATE_LIST,
@@ -60,6 +60,14 @@ import {
     DOCUMENTS_DELETE_SUCCESS, DOCUMENTS_DELETE_FAIL, DOCUMENTS_UPDATE_LIST,
     SAVE_DOCUMENTS_SUCCESS, SAVE_DOCUMENTS_FAIL,
     EDIT_DOCUMENTS_SUCCESS, EDIT_DOCUMENTS_FAIL,
+    
+    //EVENT CATEGORIES
+    EVENT_CATEGORY_FETCH_ALL_SUCCESS, EVENT_CATEGORY_FETCH_ALL_FAIL,
+    EVENT_CATEGORY_FETCH_DETAILS_SUCCESS, EVENT_CATEGORY_FETCH_DETAILS_FAIL,
+    EVENT_CATEGORY_DELETE_SUCCESS, EVENT_CATEGORY_DELETE_FAIL, EVENT_CATEGORY_UPDATE_LIST,
+    SAVE_EVENT_CATEGORY_SUCCESS, SAVE_EVENT_CATEGORY_FAIL,
+    EDIT_EVENT_CATEGORY_SUCCESS, EDIT_EVENT_CATEGORY_FAIL,
+    EVENT_ONLY_FETCH_SUCCESS, EVENT_ONLY_FETCH_FAIL,
 
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
@@ -83,6 +91,7 @@ const initialState = {
     ignatian_thoughts: [],
     popesPrayers: [],
     popesPrayerDetails: null, 
+    eventCategories: []
 }
 
 export default function (state = initialState, action) {
@@ -579,7 +588,7 @@ export default function (state = initialState, action) {
         case SAVE_DOCUMENT_CATEGORY_SUCCESS:
             return {
                 ...state,
-                documents: payload.data,
+                documentCategories: payload.data,
             };
 
         case SAVE_DOCUMENT_CATEGORY_FAIL:
@@ -590,19 +599,19 @@ export default function (state = initialState, action) {
         case EDIT_DOCUMENT_CATEGORY_SUCCESS:
             return {
                 ...state,
-                documents: payload.data,
+                documentCategories: payload.data,
             };
 
         case DOCUMENT_ONLY_FETCH_SUCCESS:
             return {
                 ...state,
-                documents: payload.data, // Store the fetched documents data
+                documentCategories: payload.data, // Store the fetched documents data
             };
 
         case DOCUMENT_ONLY_FETCH_FAIL:
             return {
                 ...state,
-                documents: [], // Handle the failure case
+                documentCategories: [], // Handle the failure case
             };
 
         case EDIT_DOCUMENT_CATEGORY_FAIL:
@@ -618,13 +627,13 @@ export default function (state = initialState, action) {
         case DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS:
             return {
                 ...state,
-                documents: payload.data, // Store the fetched customer data
+                documentCategories: payload.data, // Store the fetched customer data
             };
 
         case DOCUMENT_CATEGORY_FETCH_ALL_FAIL:
             return {
                 ...state,
-                documents: [], // Handle the failure case
+                documentCategories: [], // Handle the failure case
             };
 
         case DOCUMENT_CATEGORY_FETCH_DETAILS_SUCCESS:
@@ -674,6 +683,92 @@ export default function (state = initialState, action) {
                 ignatian_thoughts: [], // Handle the failure case
             };
 
+            // EVENT CATEGORY
+
+        case SAVE_EVENT_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                eventCategories: payload.data,
+            };
+
+        case SAVE_EVENT_CATEGORY_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_EVENT_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                eventCategories: payload.data,
+            };
+
+        case EVENT_ONLY_FETCH_SUCCESS:
+            return {
+                ...state,
+                eventCategories: payload.data, // Store the fetched EVENTs data
+            };
+
+        case EVENT_ONLY_FETCH_FAIL:
+            return {
+                ...state,
+                eventCategories: [], // Handle the failure case
+            };
+
+        case EDIT_EVENT_CATEGORY_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_EVENT_CATEGORY_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case EVENT_CATEGORY_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                eventCategories: payload.data, // Store the fetched customer data
+            };
+
+        case EVENT_CATEGORY_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                eventCategories: [], // Handle the failure case
+            };
+
+        case EVENT_CATEGORY_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                documentDetails: payload, // Store the fetched DOCUMENTS data
+            };
+
+        case EVENT_CATEGORY_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                documentDetails: [], // Store the fetched DOCUMENTS data
+            };   
+        
+        case EVENT_CATEGORY_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedEventCategories = state.documents.filter((documents) => documents.id !== payload);
+            return {
+                ...state,
+                documents: updatedEventCategories,
+            };
+
+        case EVENT_CATEGORY_DELETE_SUCCESS: 
+            const updatedEventCategory = state.documents.filter(documents => documents.id !== payload.data);
+
+            return {
+                ...state,
+                documents: updatedEventCategory,
+            };
+
+        case EVENT_CATEGORY_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
         // Dashboard
         
         case DASHBOARD_FETCH_SUCCESS:
