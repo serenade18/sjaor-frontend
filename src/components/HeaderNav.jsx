@@ -22,8 +22,8 @@ function HeaderNav({ user }) {
       '/admin/archivium': 'Archivium',
       '/admin/products': 'Products',
       '/admin/shukran': 'Shukran Magazine',
-      '/admin/addnews': 'Add News',
-      '/admin/addnews': 'Add News',
+      '/admin/addprayers': 'Add Popes Prayer Intention',
+      '/admin/editprayers': 'Add News',
     };
 
     if (id) {
@@ -32,8 +32,8 @@ function HeaderNav({ user }) {
         return 'View News';
       } else if (location.pathname.includes('edit-news')) {
         return 'Edit News';
-      } else if (location.pathname.includes('paymentsdetails')) {
-        return 'Edit Payment';
+      } else if (location.pathname.includes('editprayers')) {
+        return 'Edit Popes Prayer ';
       } else if (location.pathname.includes('batchdetails')) {
         return 'View Batch';
       } else if (location.pathname.includes('download-invoice')) {

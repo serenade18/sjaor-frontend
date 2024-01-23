@@ -31,7 +31,11 @@ const Catalogues = lazy(() => import('./pages/general/Catalogues'));
 const Shukran = lazy(() => import('./pages/general/Shukran'));
 const IgnatianThoughts = lazy(() => import('./pages/general/IgnatianThoughts'));
 const Archivium = lazy(() => import('./pages/archivium/Archivium'));
+
 const PopesPrayerIntentions = lazy(() => import('./pages/popes-intentions/PopesPrayerIntentions'));
+const AddPopesPrayer = lazy(() => import('./pages/popes-intentions/AddPopesPrayer'));
+const EditPopesPrayers = lazy(() => import('./pages/popes-intentions/EditPopesPrayers'));
+
 const Product = lazy(() => import('./pages/products/Product'));
 
 function App() {
@@ -86,6 +90,8 @@ function App() {
 
               {/* Popes Prayers */}
               <Route exact path="/admin/popes-prayer-intentions" element={<PopesPrayerIntentions/>}/>
+              <Route exact path="/admin/addprayers" element={<AddPopesPrayer/>}/>
+              <Route exact path="/admin/editprayers/:id" element={<EditPopesPrayers/>}/>
 
               {/* Products */}
               <Route exact path="/admin/products" element={<Product/>}/>
