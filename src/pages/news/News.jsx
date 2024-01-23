@@ -85,8 +85,6 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
     const filteredNews = news
     ? news.filter((news) =>
           news.title.toLowerCase().includes(searchQuery.toLowerCase())
-        //   news.phone.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        //   news.town.toLowerCase().includes(searchQuery.toLowerCase()) 
       )
     : [];
 
@@ -119,6 +117,7 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                             
                         </div>
                     </div>
+
                     <div className="row mt-2">
                         <div className="col-12">
                             <div className="card">

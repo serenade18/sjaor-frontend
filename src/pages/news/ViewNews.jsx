@@ -63,14 +63,14 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                                                 Title:
                                             </label>
                                             <h3 className='text-dark  text-lg font-weight-light'>
-                                                {newsDetails.title}
+                                                {newsDetails ? newsDetails.title : ''}
                                             </h3>
                                         </div>
                                         <div className="form-group col-lg-12 mt-2">
                                             <label htmlFor="title" className="form-control-label text-dark text-sm">
                                                 Image:
                                             </label>
-                                            <img src={newsDetails.image} className='img-fluid w-100' alt="News"/>
+                                            <img src={newsDetails ? newsDetails.image : ''} className='img-fluid w-100' alt="News"/>
                                         </div>
                                         <div className="form-group col-lg-12 mt-2">
                                             <label htmlFor="last_name" className="form-control-label text-dark text-sm">
@@ -78,10 +78,10 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                                             </label>
                                             
                                             <p className="bg-gray-201 mt-4 text-dark text-sm">
-                                                {newsDetails.body}
+                                                {newsDetails ? newsDetails.body : ''}
                                             </p>
                                             <p className='text-dark text-lg '>
-                                              Authored By : {newsDetails.author}
+                                              Authored By : {newsDetails ? newsDetails.author : ''}
                                             </p>
                                         </div>
                                     </div>

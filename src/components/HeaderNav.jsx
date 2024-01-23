@@ -23,7 +23,6 @@ function HeaderNav({ user }) {
       '/admin/products': 'Products',
       '/admin/shukran': 'Shukran Magazine',
       '/admin/addprayers': 'Add Popes Prayer Intention',
-      '/admin/editprayers': 'Add News',
     };
 
     if (id) {

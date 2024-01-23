@@ -23,14 +23,21 @@ import {
     NEWS_DELETE_SUCCESS, NEWS_DELETE_FAIL, NEWS_UPDATE_LIST,
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
-
+ 
     // CATALOGUES
     CATALOGUES_FETCH_ALL_SUCCESS, CATALOGUES_FETCH_ALL_FAIL,
     CATALOGUES_FETCH_DETAILS_SUCCESS, CATALOGUES_FETCH_DETAILS_FAIL,
     CATALOGUES_DELETE_SUCCESS, CATALOGUES_DELETE_FAIL, CATALOGUES_UPDATE_LIST,
     SAVE_CATALOGUES_SUCCESS, SAVE_CATALOGUES_FAIL,
     EDIT_CATALOGUES_SUCCESS, EDIT_CATALOGUES_FAIL,
-
+    
+    // Popes Prayer intention
+    POPES_PRAYER_INTENTION_FETCH_ALL_SUCCESS, POPES_PRAYER_INTENTION_FETCH_ALL_FAIL,
+    POPES_PRAYER_INTENTION_FETCH_DETAILS_SUCCESS, POPES_PRAYER_INTENTION_FETCH_DETAILS_FAIL,
+    POPES_PRAYER_INTENTION_DELETE_SUCCESS, POPES_PRAYER_INTENTION_DELETE_FAIL, POPES_PRAYER_INTENTION_UPDATE_LIST,
+    SAVE_POPES_PRAYER_INTENTION_SUCCESS, SAVE_POPES_PRAYER_INTENTION_FAIL,
+    EDIT_POPES_PRAYER_INTENTION_SUCCESS, EDIT_POPES_PRAYER_INTENTION_FAIL,
+  
     // SHUKRAN
     SHUKRAN_FETCH_ALL_SUCCESS, SHUKRAN_FETCH_ALL_FAIL,
     SHUKRAN_FETCH_DETAILS_SUCCESS, SHUKRAN_FETCH_DETAILS_FAIL,
@@ -511,7 +518,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
 // Api Handler for NEWS
 
-export const fetchAllNews = () => async (dispatch, getState) => {
+export const fetchAllNews = () => async (dispatch, getState) => { 
     const { access } = getState().auth;
   
     try {
@@ -1279,4 +1286,164 @@ export const fetchAllThoughts = () => async (dispatch, getState) => {
       type: IGNATIAN_THOUGHTS_FETCH_ALL_FAIL,
     });
   }
+};
+
+// Api Handler for NEWS
+
+export const fetchAllPopesPrayers = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/popes-prayers/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const popesData = response.data;
+      dispatch({
+        type: POPES_PRAYER_INTENTION_FETCH_ALL_SUCCESS,
+        payload: popesData,
+      });
+    } else {
+      dispatch({
+        type: POPES_PRAYER_INTENTION_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NEWS data:", error);
+    dispatch({
+      type: POPES_PRAYER_INTENTION_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deletePopesPrayers = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/popes-prayers/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: POPES_PRAYER_INTENTION_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: POPES_PRAYER_INTENTION_UPDATE_LIST, payload: id }); // Send the deleted NEWS ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: POPES_PRAYER_INTENTION_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: POPES_PRAYER_INTENTION_DELETE_FAIL });
+  }
+};
+
+export const fetchPopesPrayersDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/popes-prayers/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const popesData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: POPES_PRAYER_INTENTION_FETCH_DETAILS_SUCCESS,
+        payload: popesData,
+      });
+      return popesData
+    } else {
+      dispatch({
+        type: POPES_PRAYER_INTENTION_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NEWS data:", error);
+    dispatch({
+      type: POPES_PRAYER_INTENTION_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const savePopesPrayers = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/popes-prayers/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_POPES_PRAYER_INTENTION_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_POPES_PRAYER_INTENTION_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}    
+
+export const editPopesPrayers  = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/popes-prayers/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const popesData = response.data;
+      dispatch({
+          type: EDIT_POPES_PRAYER_INTENTION_SUCCESS,
+          payload: popesData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_POPES_PRAYER_INTENTION_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_POPES_PRAYER_INTENTION_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
 };

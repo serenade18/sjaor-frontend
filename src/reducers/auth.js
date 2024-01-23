@@ -22,6 +22,13 @@ import {
     SAVE_NEWS_SUCCESS, SAVE_NEWS_FAIL,
     EDIT_NEWS_SUCCESS, EDIT_NEWS_FAIL,
 
+    // Popes Prayer intentions
+    POPES_PRAYER_INTENTION_FETCH_ALL_SUCCESS, POPES_PRAYER_INTENTION_FETCH_ALL_FAIL,
+    POPES_PRAYER_INTENTION_FETCH_DETAILS_SUCCESS, POPES_PRAYER_INTENTION_FETCH_DETAILS_FAIL,
+    POPES_PRAYER_INTENTION_DELETE_SUCCESS, POPES_PRAYER_INTENTION_DELETE_FAIL, POPES_PRAYER_INTENTION_UPDATE_LIST,
+    SAVE_POPES_PRAYER_INTENTION_SUCCESS, SAVE_POPES_PRAYER_INTENTION_FAIL,
+    EDIT_POPES_PRAYER_INTENTION_SUCCESS, EDIT_POPES_PRAYER_INTENTION_FAIL,
+
     // Catalogues
     CATALOGUES_FETCH_ALL_SUCCESS, CATALOGUES_FETCH_ALL_FAIL,
     CATALOGUES_FETCH_DETAILS_SUCCESS, CATALOGUES_FETCH_DETAILS_FAIL,
@@ -74,6 +81,8 @@ const initialState = {
     shukran: [],
     shukranDetails: null,
     ignatian_thoughts: [],
+    popesPrayers: [],
+    popesPrayerDetails: null, 
 }
 
 export default function (state = initialState, action) {
@@ -268,7 +277,81 @@ export default function (state = initialState, action) {
             return {
                 ...state,
             };    
-                    
+        
+            // Popes Prayers
+
+        case SAVE_POPES_PRAYER_INTENTION_SUCCESS:
+            return {
+                ...state,
+                popesPrayers: payload.data,
+            };
+
+        case SAVE_POPES_PRAYER_INTENTION_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_POPES_PRAYER_INTENTION_SUCCESS:
+            return {
+                ...state,
+                popesPrayers: payload.data,
+            };
+
+        case EDIT_POPES_PRAYER_INTENTION_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_POPES_PRAYER_INTENTION_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case POPES_PRAYER_INTENTION_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                popesPrayers: payload.data, // Store the fetched customer data
+            };
+
+        case POPES_PRAYER_INTENTION_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                popesPrayers: [], // Handle the failure case
+            };
+
+        case POPES_PRAYER_INTENTION_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                popesPrayerDetails: payload, // Store the fetched POPES_PRAYER_INTENTION data
+            };
+
+        case POPES_PRAYER_INTENTION_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                popesPrayerDetails: [], // Store the fetched POPES_PRAYER_INTENTIONS data
+            };   
+        
+        case POPES_PRAYER_INTENTION_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedPrayer = state.popesPrayers.filter((popesPrayers) => popesPrayers.id !== payload);
+            return {
+                ...state,
+                popesPrayers: updatedPrayer,
+            };
+
+        case POPES_PRAYER_INTENTION_DELETE_SUCCESS: 
+            const updatedPrayers = state.popesPrayers.filter(popesPrayers => popesPrayers.id !== payload.data);
+
+            return {
+                ...state,
+                popesPrayers: updatedPrayers,
+            };
+
+        case POPES_PRAYER_INTENTION_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+        
         // CATALOGUES
 
         case SAVE_CATALOGUES_SUCCESS:
