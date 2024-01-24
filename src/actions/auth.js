@@ -1296,7 +1296,7 @@ export const fetchAllThoughts = () => async (dispatch, getState) => {
   }
 };
 
-// Api Handler for NEWS
+// Api Handler for Popes Prayers
 
 export const fetchAllPopesPrayers = () => async (dispatch, getState) => {
   const { access } = getState().auth;
@@ -1463,7 +1463,7 @@ export const fetchEventOnly = () => async (dispatch, getState) => {
 
   try {
     // Make an HTTP GET request to fetch batch data using the environment variable
-    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documentonly/`, {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/eventonly/`, {
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -1529,7 +1529,7 @@ export const fetchAllEventCategory = () => async (dispatch, getState) => {
 
   try {
     // Make an HTTP GET request to fetch NEWS data using the environment variable
-    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/documents-category/`, {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/event-category/`, {
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -1552,4 +1552,164 @@ export const fetchAllEventCategory = () => async (dispatch, getState) => {
       type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
     });
   }
+};
+
+// Api Handler for Events
+
+export const fetchAllEvents = () => async (dispatch, getState) => { 
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/events/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const newsData = response.data;
+      dispatch({
+        type: NEWS_FETCH_ALL_SUCCESS,
+        payload: newsData,
+      });
+    } else {
+      dispatch({
+        type: NEWS_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NEWS data:", error);
+    dispatch({
+      type: NEWS_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteEvents = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/events/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: NEWS_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: NEWS_UPDATE_LIST, payload: id }); // Send the deleted NEWS ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: NEWS_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: NEWS_DELETE_FAIL });
+  }
+};
+
+export const fetchEventsDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/events/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const newsData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: NEWS_FETCH_DETAILS_SUCCESS,
+        payload: newsData,
+      });
+      return newsData
+    } else {
+      dispatch({
+        type: NEWS_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NEWS data:", error);
+    dispatch({
+      type: NEWS_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveEvents = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/events/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_NEWS_SUCCESS,
+          payload: data 
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_NEWS_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editEvents = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/events/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const newsData = response.data;
+      dispatch({
+          type: EDIT_NEWS_SUCCESS,
+          payload: newsData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_NEWS_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_NEWS_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
 };

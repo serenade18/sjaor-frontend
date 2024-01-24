@@ -28,8 +28,8 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
     const [formData, setFormData] = useState({
-        prayer_month: '',
-        prayer_year: '',
+        event_name: '',
+        event_category: '',
         prayer_name: '',
         prayer_item: '',
         prayer_image: null,
@@ -48,8 +48,8 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
 
         const formDataToSend = new FormData();
 
-        formDataToSend.append('prayer_month', formData.prayer_month);
-        formDataToSend.append('prayer_year', formData.prayer_year);
+        formDataToSend.append('event_name', formData.event_name);
+        formDataToSend.append('event_category', formData.event_category);
         formDataToSend.append('prayer_name', formData.prayer_name);
         formDataToSend.append('prayer_item', formData.prayer_item);
         formDataToSend.append('prayer_image', formData.prayer_image);
@@ -107,9 +107,9 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                                                 <input 
                                                     className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
                                                     placeholder="Month"
-                                                    name='prayer_month'
-                                                    value={formData.prayer_month}
-                                                    onChange={(e) => setFormData({ ...formData, prayer_month: e.target.value })}
+                                                    name='event_name'
+                                                    value={formData.event_name}
+                                                    onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
                                                     required
                                                 />
                                             </div>
@@ -120,9 +120,9 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                                                 <input 
                                                     className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
                                                     placeholder="Year"
-                                                    name='prayer_year'
-                                                    value={formData.prayer_year}
-                                                    onChange={(e) => setFormData({ ...formData, prayer_year: e.target.value })}
+                                                    name='event_category'
+                                                    value={formData.event_category}
+                                                    onChange={(e) => setFormData({ ...formData, event_category: e.target.value })}
                                                     required
                                                 />
                                             </div>

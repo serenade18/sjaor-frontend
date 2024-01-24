@@ -91,8 +91,8 @@ function App() {
 
               {/* Events */}
               <Route exact path="/admin/events" element={<Events/>}/>
-              <Route exact path="/admin/editevent" element={<AddEvents/>}/>
-              <Route exact path="/admin/addevent" element={<EditEvents/>}/>
+              <Route exact path="/admin/editevent/:id" element={<EditEvents/>}/>
+              <Route exact path="/admin/addevent" element={<AddEvents/>}/>
 
               {/* Archivium */}
               <Route exact path="/admin/archivium" element={<Archivium/>}/>
