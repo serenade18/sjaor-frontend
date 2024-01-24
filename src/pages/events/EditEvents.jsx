@@ -283,7 +283,10 @@ const EditEvents = ({ isAuthenticated, editEvents, fetchEventOnly, fetchEventsDe
                                                     id="document_category"
                                                     name="document_category"
                                                     className="form-control"
-                                                    value={selectedCategoryOptions}
+                                                    value={{
+                                                        value: formData && formData.event_category,
+                                                        label: formData && categoryOptions.find(event => event.id === formData.event_category)?.category
+                                                    }}
                                                     onChange={handleCategorySelect}
                                                     options={categoryOptions && categoryOptions.map((event) => ({
                                                         value: event.id,
