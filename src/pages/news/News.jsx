@@ -79,7 +79,7 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
             });
         }
     };
-
+ 
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredNews = news

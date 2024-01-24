@@ -28,8 +28,8 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
     const [formData, setFormData] = useState({
-        event_name: '',
-        event_category: '',
+        prayer_month: '',
+        prayer_year: '',
         prayer_name: '',
         prayer_item: '',
         prayer_image: null,
@@ -48,8 +48,8 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
 
         const formDataToSend = new FormData();
 
-        formDataToSend.append('event_name', formData.event_name);
-        formDataToSend.append('event_category', formData.event_category);
+        formDataToSend.append('prayer_month', formData.prayer_month);
+        formDataToSend.append('prayer_year', formData.prayer_year);
         formDataToSend.append('prayer_name', formData.prayer_name);
         formDataToSend.append('prayer_item', formData.prayer_item);
         formDataToSend.append('prayer_image', formData.prayer_image);
@@ -65,17 +65,10 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-            // navigate('/admin/popes-prayer-intentions');
+            navigate('/admin/popes-prayer-intentions');
 
         } catch (error) {
-            // console.error('Error posting prayer', error.message);
-            // // Show error toast
-            // toast.error('Error posting prayer. Please try again.', {
-            //     position: 'top-right',
-            //     autoClose: 3000,
-            //     hideProgressBar: false,
-            // });
-            // return;
+           
         }
     };
 
@@ -104,14 +97,29 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                                                 <label htmlFor="title" className="form-control-label text-dark text-sm">
                                                     Prayer Month:
                                                 </label>
-                                                <input 
-                                                    className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
-                                                    placeholder="Month"
-                                                    name='event_name'
-                                                    value={formData.event_name}
-                                                    onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
-                                                    required
-                                                />
+                                                <div className='input-group'>
+                                                    <select 
+                                                        className='form-control' 
+                                                        name='prayer_month' 
+                                                        placeholder='Month'
+                                                        value={formData.prayer_month}
+                                                        onChange={(e) =>setFormData({ ...formData, prayer_month: e.target.value })}
+                                                    >
+                                                        <option value="">--- Choose Month---</option>
+                                                        <option value="January">January</option>
+                                                        <option value="February">February</option>
+                                                        <option value="March">March</option>
+                                                        <option value="April">April</option>
+                                                        <option value="May">May</option>
+                                                        <option value="June">June</option>
+                                                        <option value="July">July</option>
+                                                        <option value="August">August</option>
+                                                        <option value="September">September</option>
+                                                        <option value="October">October</option>
+                                                        <option value="November">November</option>
+                                                        <option value="December">December</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div className="form-group col-lg-12">
                                                 <label htmlFor="title" className="form-control-label text-dark text-sm">
@@ -120,9 +128,9 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                                                 <input 
                                                     className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
                                                     placeholder="Year"
-                                                    name='event_category'
-                                                    value={formData.event_category}
-                                                    onChange={(e) => setFormData({ ...formData, event_category: e.target.value })}
+                                                    name='prayer_year'
+                                                    value={formData.prayer_year}
+                                                    onChange={(e) => setFormData({ ...formData, prayer_year: e.target.value })}
                                                     required
                                                 />
                                             </div>
@@ -132,7 +140,7 @@ const AddPopesPrayer = ({ isAuthenticated, savePopesPrayers }) => {
                                                 </label>
                                                 <input 
                                                     className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
-                                                    placeholder="Month"
+                                                    placeholder="Name"
                                                     name='prayer_name'
                                                     value={formData.prayer_name}
                                                     onChange={(e) => setFormData({ ...formData, prayer_name: e.target.value })}

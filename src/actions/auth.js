@@ -17,6 +17,13 @@ import {
     USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
     DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
 
+    // Adusum
+    ADUSUM_FETCH_ALL_SUCCESS, ADUSUM_FETCH_ALL_FAIL,
+    ADUSUM_FETCH_DETAILS_SUCCESS, ADUSUM_FETCH_DETAILS_FAIL,
+    ADUSUM_DELETE_SUCCESS, ADUSUM_DELETE_FAIL, ADUSUM_UPDATE_LIST,
+    SAVE_ADUSUM_SUCCESS, SAVE_ADUSUM_FAIL,
+    EDIT_ADUSUM_SUCCESS, EDIT_ADUSUM_FAIL,
+
     // News
     NEWS_FETCH_ALL_SUCCESS, NEWS_FETCH_ALL_FAIL,
     NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
@@ -529,6 +536,166 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         });
         throw error; // rethrow the error so that it can be caught in the handleFormSubmit function
     }
+};
+
+// Api Handler for Adusums
+
+export const fetchAllAdusums = () => async (dispatch, getState) => { 
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/adusums/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const adusumsData = response.data;
+      dispatch({
+        type: ADUSUM_FETCH_ALL_SUCCESS,
+        payload: adusumsData,
+      });
+    } else {
+      dispatch({
+        type: ADUSUM_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching ADUSUM data:", error);
+    dispatch({
+      type: ADUSUM_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteAdusums = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/adusums/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: ADUSUM_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: ADUSUM_UPDATE_LIST, payload: id }); // Send the deleted ADUSUM ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: ADUSUM_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: ADUSUM_DELETE_FAIL });
+  }
+};
+
+export const fetchAdusumsDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/adusums/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const adusumsData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: ADUSUM_FETCH_DETAILS_SUCCESS,
+        payload: adusumsData,
+      });
+      return adusumsData
+    } else {
+      dispatch({
+        type: ADUSUM_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching ADUSUM data:", error);
+    dispatch({
+      type: ADUSUM_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveAdusums = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/adusums/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_ADUSUM_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_ADUSUM_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editAdusums = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/adusums/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const adusumsData = response.data;
+      dispatch({
+          type: EDIT_ADUSUM_SUCCESS,
+          payload: adusumsData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_ADUSUM_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_ADUSUM_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
 };
 
 // Api Handler for NEWS

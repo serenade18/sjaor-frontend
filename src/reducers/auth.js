@@ -15,6 +15,13 @@ import {
     USERS_FETCH_ALL_SUCCESS, USERS_FETCH_ALL_FAIL,
     DELETE_USER_SUCCESS, DELETE_USER_FAIL, USER_UPDATE_LIST,
     
+    // Adusum
+    ADUSUM_FETCH_ALL_SUCCESS, ADUSUM_FETCH_ALL_FAIL,
+    ADUSUM_FETCH_DETAILS_SUCCESS, ADUSUM_FETCH_DETAILS_FAIL,
+    ADUSUM_DELETE_SUCCESS, ADUSUM_DELETE_FAIL, ADUSUM_UPDATE_LIST,
+    SAVE_ADUSUM_SUCCESS, SAVE_ADUSUM_FAIL,
+    EDIT_ADUSUM_SUCCESS, EDIT_ADUSUM_FAIL,
+    
     // News
     NEWS_FETCH_ALL_SUCCESS, NEWS_FETCH_ALL_FAIL,
     NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
@@ -101,6 +108,8 @@ const initialState = {
     eventCategories: [],
     events: [],
     eventDetails: null,
+    adusums: [],
+    adusumDetails: null
 }
 
 export default function (state = initialState, action) {
@@ -222,6 +231,80 @@ export default function (state = initialState, action) {
                 users: updateUsers,
             };
 
+            // ADUSUM
+
+        case SAVE_ADUSUM_SUCCESS:
+            return {
+                ...state,
+                adusums: payload.data,
+            };
+
+        case SAVE_ADUSUM_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_ADUSUM_SUCCESS:
+            return {
+                ...state,
+                adusums: payload.data,
+            };
+
+        case EDIT_ADUSUM_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_ADUSUM_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case ADUSUM_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                adusums: payload.data, // Store the fetched customer data
+            };
+
+        case ADUSUM_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                adusums: [], // Handle the failure case
+            };
+
+        case ADUSUM_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                adusumDetails: payload, // Store the fetched ADUSUM data
+            };
+
+        case ADUSUM_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                adusumDetails: [], // Store the fetched ADUSUM data
+            };   
+        
+        case ADUSUM_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedAdusums = state.adusums.filter((adusums) => adusums.id !== payload);
+            return {
+                ...state,
+                adusums: updatedAdusums,
+            };
+
+        case ADUSUM_DELETE_SUCCESS: 
+            const updatedAdusum = state.adusums.filter(adusums => adusums.id !== payload.data);
+
+            return {
+                ...state,
+                adusums: updatedAdusum,
+            };
+
+        case ADUSUM_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+        
         // News
 
         case SAVE_NEWS_SUCCESS:

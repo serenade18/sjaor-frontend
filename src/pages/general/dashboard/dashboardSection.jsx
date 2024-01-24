@@ -38,7 +38,7 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
 
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold"> verified Adusums</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold"> Adusums</p>
                                             <h5 className="font-weight-bolder text-dark">
                                                 {verifiedAdusums}
                                             </h5>
@@ -117,7 +117,7 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                                     </div>
                                     <div className="col-8">
                                         <div className="numbers">
-                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold">Products</p>
+                                            <p className="text-sm text-dark mb-0 text-uppercase font-weight-bold">Event Categories</p>
                                             <h5 className="font-weight-bolder text-dark">
                                                 {totalProducts}
                                             </h5>
