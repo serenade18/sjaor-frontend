@@ -68,6 +68,13 @@ import {
     EDIT_EVENT_CATEGORY_SUCCESS, EDIT_EVENT_CATEGORY_FAIL,
     EVENT_ONLY_FETCH_SUCCESS, EVENT_ONLY_FETCH_FAIL,
 
+    // EVENTS
+    EVENTS_FETCH_ALL_SUCCESS, EVENTS_FETCH_ALL_FAIL,
+    EVENTS_FETCH_DETAILS_SUCCESS, EVENTS_FETCH_DETAILS_FAIL,
+    EVENTS_DELETE_SUCCESS, EVENTS_DELETE_FAIL, EVENTS_UPDATE_LIST,
+    SAVE_EVENTS_SUCCESS, SAVE_EVENTS_FAIL,
+    EDIT_EVENTS_SUCCESS, EDIT_EVENTS_FAIL,
+
     // IGNATIAN THOUGHTS
     IGNATIAN_THOUGHTS_FETCH_ALL_SUCCESS, IGNATIAN_THOUGHTS_FETCH_ALL_FAIL,
 
@@ -1472,19 +1479,19 @@ export const fetchEventOnly = () => async (dispatch, getState) => {
     if (response.status === 200) {
       const categoryData = response.data;
       dispatch({
-        type: DOCUMENT_ONLY_FETCH_SUCCESS,
+        type: EVENT_ONLY_FETCH_SUCCESS,
         payload: categoryData,
       });
       return categoryData;
     } else {
       dispatch({
-        type: DOCUMENT_ONLY_FETCH_FAIL,
+        type: EVENT_ONLY_FETCH_FAIL,
       });
     }
   } catch (error) {
     console.error("Error fetching category data:", error);
     dispatch({
-      type: DOCUMENT_ONLY_FETCH_FAIL,
+      type: EVENT_ONLY_FETCH_FAIL,
     });
   }
 };
@@ -1507,14 +1514,14 @@ export const saveEventCategory = (category) => async (dispatch, getState) => {
       if (res.ok) {
           const data = await res.json();
           dispatch({
-            type: SAVE_DOCUMENT_CATEGORY_SUCCESS,
+            type: SAVE_EVENT_CATEGORY_SUCCESS,
             payload: data
           });
           return { success: true, data };
       } else {
           const error = await res.json();
           dispatch({
-            type: SAVE_DOCUMENT_CATEGORY_FAIL,
+            type: SAVE_EVENT_CATEGORY_FAIL,
             payload: error
           });
           return { success: false, error };
@@ -1536,20 +1543,20 @@ export const fetchAllEventCategory = () => async (dispatch, getState) => {
     });
 
     if (response.status === 200) {
-      const documentsData = response.data;
+      const eventData = response.data;
       dispatch({
-        type: DOCUMENT_CATEGORY_FETCH_ALL_SUCCESS,
-        payload: documentsData,
+        type: EVENT_CATEGORY_FETCH_ALL_SUCCESS,
+        payload: eventData,
       });
     } else {
       dispatch({
-        type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+        type: EVENT_CATEGORY_FETCH_ALL_FAIL,
       });
     }
   } catch (error) {
-    console.error("Error fetching DOCUMENTS data:", error);
+    console.error("Error fetching EVENTS data:", error);
     dispatch({
-      type: DOCUMENT_CATEGORY_FETCH_ALL_FAIL,
+      type: EVENT_CATEGORY_FETCH_ALL_FAIL,
     });
   }
 };
@@ -1568,20 +1575,20 @@ export const fetchAllEvents = () => async (dispatch, getState) => {
     });
 
     if (response.status === 200) {
-      const newsData = response.data;
+      const eventsData = response.data;
       dispatch({
-        type: NEWS_FETCH_ALL_SUCCESS,
-        payload: newsData,
+        type: EVENTS_FETCH_ALL_SUCCESS,
+        payload: eventsData,
       });
     } else {
       dispatch({
-        type: NEWS_FETCH_ALL_FAIL,
+        type: EVENTS_FETCH_ALL_FAIL,
       });
     }
   } catch (error) {
-    console.error("Error fetching NEWS data:", error);
+    console.error("Error fetching EVENTS data:", error);
     dispatch({
-      type: NEWS_FETCH_ALL_FAIL,
+      type: EVENTS_FETCH_ALL_FAIL,
     });
   }
 };
@@ -1598,17 +1605,17 @@ export const deleteEvents = (id) => async (dispatch, getState) => {
 
       if (response.status === 200) {
           // Dispatch a success action if the delete was successful
-          dispatch({ type: NEWS_DELETE_SUCCESS });
+          dispatch({ type: EVENTS_DELETE_SUCCESS });
 
           // Dispatch an action to update the customer list
-          dispatch({ type: NEWS_UPDATE_LIST, payload: id }); // Send the deleted NEWS ID
+          dispatch({ type: EVENTS_UPDATE_LIST, payload: id }); // Send the deleted EVENTS ID
       } else {
           // Dispatch a failure action if the delete failed
-          dispatch({ type: NEWS_DELETE_FAIL });
+          dispatch({ type: EVENTS_DELETE_FAIL });
       }
   } catch (error) {
       console.log(error);
-      dispatch({ type: NEWS_DELETE_FAIL });
+      dispatch({ type: EVENTS_DELETE_FAIL });
   }
 };
 
@@ -1623,21 +1630,21 @@ export const fetchEventsDetails = (id) => async (dispatch, getState) => {
     });
 
     if (response.status === 200) {
-      const newsData = response.data.data; // Access data from the "data" key
+      const eventsData = response.data.data; // Access data from the "data" key
       dispatch({
-        type: NEWS_FETCH_DETAILS_SUCCESS,
-        payload: newsData,
+        type: EVENTS_FETCH_DETAILS_SUCCESS,
+        payload: eventsData,
       });
-      return newsData
+      return eventsData
     } else {
       dispatch({
-        type: NEWS_FETCH_DETAILS_FAIL,
+        type: EVENTS_FETCH_DETAILS_FAIL,
       });
     }
   } catch (error) {
-    console.error("Error fetching NEWS data:", error);
+    console.error("Error fetching EVENTS data:", error);
     dispatch({
-      type: NEWS_FETCH_DETAILS_FAIL,
+      type: EVENTS_FETCH_DETAILS_FAIL,
     });
   }
 };
@@ -1659,7 +1666,7 @@ try {
     if (response.status === 201) {
         const data = await res.json();
         dispatch({
-          type: SAVE_NEWS_SUCCESS,
+          type: SAVE_EVENTS_SUCCESS,
           payload: data 
         });
         console.log(data)
@@ -1667,7 +1674,7 @@ try {
     } else {
         const error = await res.json();
         dispatch({
-          type: SAVE_NEWS_FAIL,
+          type: SAVE_EVENTS_FAIL,
           payload: error
         });
         return { success: false, error };
@@ -1693,22 +1700,22 @@ try {
 );
 
   if (response.status === 201) {
-      const newsData = response.data;
+      const eventsData = response.data;
       dispatch({
-          type: EDIT_NEWS_SUCCESS,
-          payload: newsData,
+          type: EDIT_EVENTS_SUCCESS,
+          payload: eventsData,
       });
   } else {
     const error = await res.json();
     dispatch({
-      type: EDIT_NEWS_FAIL,
+      type: EDIT_EVENTS_FAIL,
       payload: error,
     });
     return { success: false, error };
   }
 } catch (error) {
   dispatch({
-    type: EDIT_NEWS_FAIL, // Change this to the correct action type
+    type: EDIT_EVENTS_FAIL, // Change this to the correct action type
   });
   return { success: false, error: 'Network error' };
 }

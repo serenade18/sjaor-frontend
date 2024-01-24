@@ -34,8 +34,8 @@ function HeaderNav({ user }) {
         return 'Edit News';
       } else if (location.pathname.includes('editprayers')) {
         return 'Edit Popes Prayer ';
-      } else if (location.pathname.includes('batchdetails')) {
-        return 'View Batch';
+      } else if (location.pathname.includes('editevent')) {
+        return 'Edit Event';
       } else if (location.pathname.includes('download-invoice')) {
         return 'Downlaod Invoice'; 
       } else if (location.pathname.includes('employeedetails')) {

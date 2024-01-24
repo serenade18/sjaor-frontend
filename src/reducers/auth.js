@@ -68,6 +68,13 @@ import {
     SAVE_EVENT_CATEGORY_SUCCESS, SAVE_EVENT_CATEGORY_FAIL,
     EDIT_EVENT_CATEGORY_SUCCESS, EDIT_EVENT_CATEGORY_FAIL,
     EVENT_ONLY_FETCH_SUCCESS, EVENT_ONLY_FETCH_FAIL,
+     
+    // EVENTS
+    EVENTS_FETCH_ALL_SUCCESS, EVENTS_FETCH_ALL_FAIL,
+    EVENTS_FETCH_DETAILS_SUCCESS, EVENTS_FETCH_DETAILS_FAIL,
+    EVENTS_DELETE_SUCCESS, EVENTS_DELETE_FAIL, EVENTS_UPDATE_LIST,
+    SAVE_EVENTS_SUCCESS, SAVE_EVENTS_FAIL,
+    EDIT_EVENTS_SUCCESS, EDIT_EVENTS_FAIL,
 
     // dashboard
     DASHBOARD_FETCH_SUCCESS, DASHBOARD_FETCH_FAIL,
@@ -91,7 +98,9 @@ const initialState = {
     ignatian_thoughts: [],
     popesPrayers: [],
     popesPrayerDetails: null, 
-    eventCategories: []
+    eventCategories: [],
+    events: [],
+    eventDetails: null,
 }
 
 export default function (state = initialState, action) {
@@ -769,6 +778,80 @@ export default function (state = initialState, action) {
                 ...state,
             };    
           
+            // EVENTS
+
+        case SAVE_EVENTS_SUCCESS:
+            return {
+                ...state,
+                events: payload.data,
+            };
+
+        case SAVE_EVENTS_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_EVENTS_SUCCESS:
+            return {
+                ...state,
+                events: payload.data,
+            };
+
+        case EDIT_EVENTS_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_EVENTS_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case EVENTS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                events: payload.data, // Store the fetched customer data
+            };
+
+        case EVENTS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                events: [], // Handle the failure case
+            };
+
+        case EVENTS_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                eventDetails: payload, // Store the fetched EVENTS data
+            };
+
+        case EVENTS_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                eventDetails: [], // Store the fetched EVENTS data
+            };   
+        
+        case EVENTS_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedEvents = state.events.filter((events) => events.id !== payload);
+            return {
+                ...state,
+                events: updatedEvents,
+            };
+
+        case EVENTS_DELETE_SUCCESS: 
+            const updatedEvent = state.events.filter(events => events.id !== payload.data);
+
+            return {
+                ...state,
+                events: updatedEvent,
+            };
+
+        case EVENTS_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+        
         // Dashboard
         
         case DASHBOARD_FETCH_SUCCESS:
