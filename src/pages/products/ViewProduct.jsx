@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'; 
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
-import { fetchNewsDetails } from '../../actions/auth'
+import { fetchProductDetails } from '../../actions/auth'
 
-const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
+const ViewProduct = ({ isAuthenticated, fetchProductDetails, productDetails }) => {
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -14,7 +14,7 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
         } else {
             async function fetchData() {
                 try {
-                    const newsData = await fetchNewsDetails(id)
+                    const newsData = await fetchProductDetails(id)
                     console.log('News Data', newsData)
                 } catch (error) {
                     console.error('Error fetching news data', error)
@@ -44,7 +44,7 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                 <div className="container-fluid py-5">
                     <div className="d-sm-flex justify-content-between">
                         <div className="dropdown d-inline">
-                            <Link to="/admin/news" className="btn btn-outline-dark">
+                            <Link to="/admin/products" className="btn btn-outline-dark">
                                 <i className="ni ni-curved-next"></i> Back
                             </Link>
                         </div>
@@ -63,25 +63,21 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                                                 Title:
                                             </label>
                                             <h3 className='text-dark  text-lg font-weight-light'>
-                                                {newsDetails ? newsDetails.title : ''}
+                                                {productDetails ? productDetails.product_title : ''}
                                             </h3>
                                         </div>
                                         <div className="form-group col-lg-12 mt-2">
                                             <label htmlFor="title" className="form-control-label text-dark text-sm">
                                                 Image:
                                             </label>
-                                            <img src={newsDetails ? newsDetails.image : ''} className='img-fluid w-100' alt="News"/>
+                                            <img src={productDetails ? productDetails.product_image : ''} className='img-fluid w-30' alt="News"/>
                                         </div>
                                         <div className="form-group col-lg-12 mt-2">
                                             <label htmlFor="last_name" className="form-control-label text-dark text-sm">
-                                                Body:
+                                                Description:
                                             </label>
-                                            
                                             <p className="bg-gray-201 mt-4 text-dark text-sm">
-                                                {newsDetails ? newsDetails.body : ''}
-                                            </p>
-                                            <p className='text-dark text-lg '>
-                                              Authored By : {newsDetails ? newsDetails.author : ''}
+                                                {productDetails ? productDetails.product_description : ''}
                                             </p>
                                         </div>
                                     </div>
@@ -97,13 +93,13 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    newsDetails: state.auth.newsDetails,
+    productDetails: state.auth.productDetails,
     news: state.auth.news
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchNewsDetails: (news_id) => dispatch(fetchNewsDetails(news_id)),
+    fetchProductDetails: (news_id) => dispatch(fetchProductDetails(news_id)),
     
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewNews)
+export default connect(mapStateToProps, mapDispatchToProps)(ViewProduct)

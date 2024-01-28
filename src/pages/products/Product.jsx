@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
-import { fetchAllNews, deleteNews } from '../../actions/auth';
+import { fetchAllProducts, deleteProducts } from '../../actions/auth';
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 
-const truncateText = (text, lines) => {
-    const words = text.split(' ');
-    const truncatedText = words.slice(0, lines).join(' ');
-    return truncatedText;
-  };
-
-const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
+const Product = ({ isAuthenticated, fetchAllProducts, deleteProducts, products, user }) => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const newsPerPage = 24;
+    const productsPerPage = 24;
     const maxPagesDisplayed = 5;
 
     const desktopStyle = {
@@ -33,26 +27,26 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
     useEffect(() => {
         if (isAuthenticated) {
             // Fetch customer data only if authenticated
-                fetchAllNews();
+                fetchAllProducts();
         } else {
             // navigate('/');
         }
-    }, [isAuthenticated, navigate, fetchAllNews]);
+    }, [isAuthenticated, navigate, fetchAllProducts]);
 
     if (!isAuthenticated) {
         navigate('/');
     } 
 
-    const viewNews = (news_id) => {
-        navigate('/admin/newsdetails/' + news_id);
+    const viewProducts = (products_id) => {
+        navigate('/admin/viewproduct/' + products_id);
     };
 
-    const EditNews = (news_id) => {
-        navigate('/admin/edit-news/' + news_id);
+    const EditProduct = (products_id) => {
+        navigate('/admin/editproduct/' + products_id);
     };
 
-    const handleDelete = async (news_id) => {
-        const confirmed = window.confirm('Are you sure you want to delete this News Article?');
+    const handleDelete = async (products_id) => {
+        const confirmed = window.confirm('Are you sure you want to delete this products Article?');
 
         if (!confirmed) {
             swal.fire({
@@ -64,33 +58,33 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
         }
 
         try {
-            await deleteNews(news_id);
-            await fetchAllNews();
+            await deleteProducts(products_id);
+            await fetchAllProducts();
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'News deleted successfully!',
+                text: 'products deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete News Article. Please try again.',
+                text: 'Failed to delete products Article. Please try again.',
             });
         }
     };
  
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredNews = news
-    ? news.filter((news) =>
-          news.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredProducts = products
+    ? products.filter((products) =>
+          products.product_description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
-    const indexOfLastNews = currentPage * newsPerPage;
-    const indexOfFirstNews = indexOfLastNews - newsPerPage;
-    const currentNews = filteredNews.slice(indexOfFirstNews, indexOfLastNews);
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -98,7 +92,7 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
 
     const startPage = Math.max(1, currentPage - Math.floor(maxPagesDisplayed / 2));
     const endPage = Math.min(
-        Math.ceil(filteredNews.length / newsPerPage),
+        Math.ceil(filteredProducts.length / productsPerPage),
         startPage + maxPagesDisplayed - 1
     );
 
@@ -136,31 +130,30 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                             </div>
                                         </div>
                                         <div className="dataTable-container">
-                                            {filteredNews.length > 0 ? (
+                                            {filteredProducts.length > 0 ? (
                                                 <table className="table table-flush dataTable-table" id="datatable-search">
                                                     <thead className="thead-light">
                                                         <tr>
-                                                            <th data-sortable="" style={{ width: '4.6514%' }}>
+                                                            <th data-sortable="" style={{ width: '16%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Id
                                                                 </a>
-                                                            </th>
-                                                            <th data-sortable="" style={{ width: '23%' }}>
+                                                            </th><th data-sortable="" style={{ width: '16%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Title
+                                                                    title
                                                                 </a>
                                                             </th>
-                                                            <th data-sortable="" style={{ width: '24%' }}>
+                                                            <th data-sortable="" style={{ width: '16%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Image
                                                                 </a>
                                                             </th>
-                                                            <th data-sortable="" style={{ width: '10.6114%' }}>
+                                                            <th data-sortable="" style={{ width: '16%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
-                                                                    Body
+                                                                    Description
                                                                 </a>
                                                             </th>
-                                                            <th data-sortable="" style={{ width: '24%' }}>
+                                                            <th data-sortable="" style={{ width: '16%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Added on
                                                                 </a>
@@ -179,36 +172,38 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                     </thead>
 
                                                     <tbody>
-                                                        {currentNews.length > 0 ? (
-                                                            currentNews.map((news) => (
-                                                                <tr key={news.id}>
+                                                        {currentProducts.length > 0 ? (
+                                                            currentProducts.map((products) => (
+                                                                <tr key={products.id}>
                                                                     <td>
                                                                         <div className="d-flex align-items-center">
-                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{news.id}</p>
+                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{products.id}</p>
                                                                         </div>
                                                                     </td>
-                                                                    <td className="font-weight-bold">
-                                                                        <span className="my-2 text-xs">{news.title}</span>
+                                                                    <td>
+                                                                        <div className="d-flex align-items-center">
+                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">{products.product_title}</p>
+                                                                        </div>
                                                                     </td>
                                                                     <td className="w-20">
                                                                         <img
                                                                         className="w-100 h-50 border-radius-sm img-fluid" 
-                                                                            src={news.image}
+                                                                            src={products.product_image}
                                                                         />
                                                                     </td>
-                                                                    <td className="text-xs font-weight-bold">
-                                                                        <span className="my-2 text-xs">{truncateText(news.body, 8)}</span>
+                                                                    <td className="font-weight-bold">
+                                                                        <span className="my-2 text-xs">{products.product_description}</span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">
-                                                                            {new Date(news.added_on).toLocaleString()}
+                                                                            {new Date(products.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => viewNews(news.id)}
+                                                                                onClick={() => viewProducts(products.id)}
                                                                             >
                                                                                 <i className="fas fa-eye" aria-hidden="true"></i>
                                                                             </button>
@@ -219,7 +214,7 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => EditNews(news.id)}
+                                                                                onClick={() => EditProduct(products.id)}
                                                                             >
                                                                                 <i className="fa-regular fa-pen-to-square" aria-hidden="true"></i>
                                                                             </button>
@@ -230,7 +225,7 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => handleDelete(news.id)}
+                                                                                onClick={() => handleDelete(products.id)}
                                                                             >
                                                                             <i className="fas fa-times" aria-hidden="true"></i>
                                                                             </button>
@@ -254,7 +249,7 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                         </div>
 
                                         <div className="dataTable-bottom">
-                                            <div className="dataTable-info">Showing {filteredNews.length} entries</div>
+                                            <div className="dataTable-info">Showing {filteredProducts.length} entries</div>
                                             <nav className="dataTable-pagination">
                                                 <ul className="dataTable-pagination-list">
                                                     <li className="pager">
@@ -276,7 +271,7 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                             </a>
                                                         </li>
                                                     ))}
-                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredNews.length / newsPerPage) && (
+                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredProducts.length / productsPerPage) && (
                                                         <li className="pager">
                                                             <a
                                                                 href="#"
@@ -304,14 +299,14 @@ const Product = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    news: state.auth.news,
+    products: state.auth.products,
     user: state.auth.user
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllNews: () => dispatch(fetchAllNews()),
-        deleteNews: (news_id) => dispatch(deleteNews(news_id)),
+        fetchAllProducts: () => dispatch(fetchAllProducts()),
+        deleteProducts: (products_id) => dispatch(deleteProducts(products_id)),
     };
 };
 

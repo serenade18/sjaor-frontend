@@ -51,6 +51,7 @@ const EditPopesPrayers = lazy(() => import('./pages/popes-intentions/EditPopesPr
 const Product = lazy(() => import('./pages/products/Product'));
 const AddProduct = lazy(() => import('./pages/products/AddProduct'));
 const EditProduct = lazy(() => import('./pages/products/EditProduct'));
+const ViewProduct = lazy(() => import('./pages/products/ViewProduct'));
 
 function App() {
   useEffect(() => {
@@ -115,6 +116,7 @@ function App() {
               <Route exact path="/admin/products" element={<Product/>}/>
               <Route exact path="/admin/addproduct" element={<AddProduct/>}/>
               <Route exact path="/admin/editproduct/:id" element={<EditProduct/>}/>
+              <Route exact path="/admin/viewproduct/:id" element={<ViewProduct/>}/>
 
             </Routes>
           </Layout>

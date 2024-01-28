@@ -2085,7 +2085,7 @@ try {
     });
     return { success: false, error };
   }
-} catch (error) {
+} catch (error) { 
   dispatch({
     type: EDIT_EVENTS_FAIL, // Change this to the correct action type
   });

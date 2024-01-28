@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
-import { saveNews } from '../../actions/auth'
+import { saveProducts } from '../../actions/auth'
 import { toast } from 'react-toastify';
 
-const AddProduct = ({ isAuthenticated, saveNews }) => {
+const AddProduct = ({ isAuthenticated, saveProducts }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,17 +28,16 @@ const AddProduct = ({ isAuthenticated, saveNews }) => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
     const [formData, setFormData] = useState({
-        title: '',
-        image: null,
-        body: '',
-        author: ''
+        product_title: '',
+        product_image: null,
+        product_description: '',
     });
 
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
-            [name]: name === 'image' ? files[0] : value,
+            [name]: name === 'product_image' ? files[0] : value,
         });
     };
 
@@ -47,23 +46,22 @@ const AddProduct = ({ isAuthenticated, saveNews }) => {
 
         const formDataToSend = new FormData();
 
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('image', formData.image);
-        formDataToSend.append('body', formData.body);
-        formDataToSend.append('author', formData.author);
+        formDataToSend.append('product_title', formData.product_title);
+        formDataToSend.append('product_image', formData.product_image);
+        formDataToSend.append('product_description', formData.product_description);
 
         try {
-            const response = await saveNews(formDataToSend);
+            const response = await saveProducts(formDataToSend);
             console.log(response);
 
             // console.log('News posted successfully');
             // Show success toast
-            toast.success('News posted successfully', {
+            toast.success('Produc Added successfully', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-            // navigate('/admin/archivium');
+            navigate('/admin/products');
 
         } catch (error) {
             console.error('Error posting play', error.message);
@@ -100,16 +98,16 @@ const AddProduct = ({ isAuthenticated, saveNews }) => {
                                 <div className="card">
                                     <div className="card-body p-3">
                                         <div className="mt-4">
-                                            <div className="form-group col-lg-12">
+                                            <div className="form-group col-lg-12 mt-2">
                                                 <label htmlFor="title" className="form-control-label text-dark text-sm">
                                                     Title:
                                                 </label>
                                                 <input 
                                                     className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
                                                     placeholder="Title"
-                                                    name='title'
-                                                    value={formData.title}
-                                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                                    name='product_title'
+                                                    value={formData.product_title}
+                                                    onChange={(e) => setFormData({ ...formData, product_title: e.target.value })}
                                                     required
                                                 />
                                             </div>
@@ -124,7 +122,7 @@ const AddProduct = ({ isAuthenticated, saveNews }) => {
                                                             required
                                                             type="file"
                                                             accept='image/*'
-                                                            name='image'
+                                                            name='product_image'
                                                             onChange={handleInputChange}
                                                         />
                                                         </button>
@@ -133,30 +131,17 @@ const AddProduct = ({ isAuthenticated, saveNews }) => {
                                             </div>
                                             <div className="form-group col-lg-12 mt-2">
                                                 <label htmlFor="last_name" className="form-control-label text-dark text-sm">
-                                                    Body:
+                                                    Description:
                                                 </label>
                                                 <textarea 
                                                     className="form-control bg-gray-201 mt-4 text-dark text-sm" 
                                                     id="exampleFormControlTextarea1" 
                                                     placeholder="Type / Paste your news article here....."
-                                                    name='body'
-                                                    value={formData.body}
-                                                    onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+                                                    name='product_description'
+                                                    value={formData.product_description}
+                                                    onChange={(e) => setFormData({ ...formData, product_description: e.target.value })}
                                                     required
                                                     rows="8"
-                                                />
-                                            </div>
-                                            <div className="form-group col-lg-12 mt-2">
-                                                <label htmlFor="title" className="form-control-label text-dark text-sm">
-                                                    Wriiten by:
-                                                </label>
-                                                <input 
-                                                    className="form-control form-control-lg bg-gray-201 text-dark text-capitalize text-sm" 
-                                                    placeholder="Written By"
-                                                    name='author'
-                                                    value={formData.author}
-                                                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -183,4 +168,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { saveNews })(AddProduct)
+export default connect(mapStateToProps, { saveProducts })(AddProduct)

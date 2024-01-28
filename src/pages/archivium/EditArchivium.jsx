@@ -70,10 +70,35 @@ const EditArchivium = ({ isAuthenticated, fetchArchiviumDetails, editArchivium }
 
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: name === 'avm_picture' ? files[0] : value,
-        });
+        if (name === 'avm_video') {
+            // Parse and modify the iframe tag
+            const modifiedValue = modifyIframeTag(value);
+            setFormData({
+                ...formData,
+                [name]: modifiedValue,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: name === 'avm_picture' ? files[0] : value,
+            });
+        }
+    };
+
+    const modifyIframeTag = (iframeTag) => {
+        // Parse the iframe tag
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(iframeTag, 'text/html');
+        const iframeElement = doc.body.firstChild;
+
+        // Modify width and height attributes
+        iframeElement.width = '100%';
+        iframeElement.height = '100%';
+
+        // Serialize the modified iframe tag
+        const modifiedIframeTag = new XMLSerializer().serializeToString(iframeElement);
+
+        return modifiedIframeTag;
     };
 
     const handleFormSubmit = async (e) => {

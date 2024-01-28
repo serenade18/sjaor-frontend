@@ -36,10 +36,35 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
 
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: name === 'avm_picture' ? files[0] : value,
-        });
+        if (name === 'avm_video') {
+            // Parse and modify the iframe tag
+            const modifiedValue = modifyIframeTag(value);
+            setFormData({
+                ...formData,
+                [name]: modifiedValue,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: name === 'avm_picture' ? files[0] : value,
+            });
+        }
+    };
+
+    const modifyIframeTag = (iframeTag) => {
+        // Parse the iframe tag
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(iframeTag, 'text/html');
+        const iframeElement = doc.body.firstChild;
+
+        // Modify width and height attributes
+        iframeElement.width = '100%';
+        iframeElement.height = '100%';
+
+        // Serialize the modified iframe tag
+        const modifiedIframeTag = new XMLSerializer().serializeToString(iframeElement);
+
+        return modifiedIframeTag;
     };
 
     const handleFormSubmit = async (e) => {
@@ -56,7 +81,6 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
             const response = await saveArchivium(formDataToSend);
             console.log(response);
 
-            // console.log('News posted successfully');
             // Show success toast
             toast.success('Archivium posted successfully', {
                 position: 'top-right',
@@ -91,7 +115,6 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
                         <div className="d-flex">
                             
                         </div>
-
                     </div>
 
                     <form onSubmit={handleFormSubmit} encType="multipart/form-data">
@@ -129,7 +152,7 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
                                                         />
                                                         </button>
                                                     </div>
-                                                </div>
+                                                </div> 
                                             </div>
                                             <div className="form-group col-lg-12 mt-2">
                                                 <label htmlFor="last_name" className="form-control-label text-dark text-sm">
@@ -155,8 +178,9 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
                                                     placeholder="<iframe width='100' height='100'....."
                                                     name='avm_video'
                                                     value={formData.avm_video}
-                                                    onChange={(e) => setFormData({ ...formData, avm_video: e.target.value })}
+                                                    onChange={handleInputChange}
                                                     rows="8"
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -176,11 +200,11 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { saveArchivium })(AddArchivium)
+export default connect(mapStateToProps, { saveArchivium })(AddArchivium);

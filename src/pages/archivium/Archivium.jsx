@@ -9,7 +9,7 @@ const truncateText = (text, lines) => {
     const words = text.split(' ');
     const truncatedText = words.slice(0, lines).join(' ');
     return truncatedText;
-  };
+  }; 
 
 const Archivium = ({ isAuthenticated, fetchAllArchivium, deleteArchivium, archivium, user }) => {
     const navigate = useNavigate();
