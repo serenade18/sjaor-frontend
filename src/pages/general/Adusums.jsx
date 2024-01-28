@@ -37,36 +37,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
         navigate('/');
     } 
 
-    // const verifyAdusum = async (adusumId) => {
-    //     const confirmed = window.confirm('Are you sure you want to verify this Adusum?');
-
-    //     if (!confirmed) {
-    //         return;
-    //     }
-
-    //     try {
-    //         // Call the editAdusums action with the new status value
-    //         await editAdusums({ status: 1 }, adusumId);
-    //         await fetchAllAdusums();
-    //         swal.fire({
-    //             icon: 'success',
-    //             title: 'Success',
-    //             text: 'Adusum verified successfully!',
-    //         });
-    //     } catch (error) {
-    //         swal.fire({
-    //             icon: 'error',
-    //             title: 'Error',
-    //             text: 'Failed to verify Adusum. Please try again.',
-    //         });
-    //     }
-    // };
     const verifyAdusum = async (adusumId) => {
-        const confirmed = window.confirm('Are you sure you want to verify this Adusum?');
-    
-        if (!confirmed) {
-            return;
-        }
     
         try {
             // Fetch the current Adusum data
@@ -298,12 +269,12 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
-                                                                                className="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
+                                                                                className={`btn ${adusums.status ? 'btn-success' : 'bg-gradient-blue'} mb-0 me-2 btn-sm text-white d-flex align-items-center justify-content-center`}
                                                                                 onClick={() => verifyAdusum(adusums.id)}
                                                                             >
-                                                                                <i className="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                                                                                <i className="fa-regular fa-pen-to-square text-white" aria-hidden="true"></i> 
+                                                                                {adusums.status ? 'Verified' : 'Verify'}
                                                                             </button>
-                                                                            <span>Edit</span>
                                                                         </div>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">

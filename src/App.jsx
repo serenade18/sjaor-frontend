@@ -36,14 +36,21 @@ const AddEvents = lazy(() => import('./pages/events/AddEvents'));
 const EditEvents = lazy(() => import('./pages/events/EditEvents'));
 
 const Adusums = lazy(() => import('./pages/general/Adusums'));
+
+// Archivium routes
 const Archivium = lazy(() => import('./pages/archivium/Archivium'));
+const AddArchivium = lazy(() => import('./pages/archivium/AddArchivium'));
+const EditArchivium = lazy(() => import('./pages/archivium/EditArchivium'));
 
 // Popes Prayers Routes
 const PopesPrayerIntentions = lazy(() => import('./pages/popes-intentions/PopesPrayerIntentions'));
 const AddPopesPrayer = lazy(() => import('./pages/popes-intentions/AddPopesPrayer'));
 const EditPopesPrayers = lazy(() => import('./pages/popes-intentions/EditPopesPrayers'));
 
+// Products Routes
 const Product = lazy(() => import('./pages/products/Product'));
+const AddProduct = lazy(() => import('./pages/products/AddProduct'));
+const EditProduct = lazy(() => import('./pages/products/EditProduct'));
 
 function App() {
   useEffect(() => {
@@ -96,6 +103,8 @@ function App() {
 
               {/* Archivium */}
               <Route exact path="/admin/archivium" element={<Archivium/>}/>
+              <Route exact path="/admin/addarchivium" element={<AddArchivium/>}/>
+              <Route exact path="/admin/editarchivium/:id" element={<EditArchivium/>}/>
 
               {/* Popes Prayers */}
               <Route exact path="/admin/popes-prayer-intentions" element={<PopesPrayerIntentions/>}/>
@@ -104,6 +113,8 @@ function App() {
 
               {/* Products */}
               <Route exact path="/admin/products" element={<Product/>}/>
+              <Route exact path="/admin/addproduct" element={<AddProduct/>}/>
+              <Route exact path="/admin/editproduct/:id" element={<EditProduct/>}/>
 
             </Routes>
           </Layout>

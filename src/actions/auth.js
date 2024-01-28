@@ -540,6 +540,37 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
 // Api Handler for Adusums
 
+export const fetchAdusums = () => async (dispatch, getState) => { 
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/inactive/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const adusumsData = response.data;
+      dispatch({
+        type: ADUSUM_FETCH_ALL_SUCCESS,
+        payload: adusumsData,
+      });
+    } else {
+      dispatch({
+        type: ADUSUM_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching ADUSUM data:", error);
+    dispatch({
+      type: ADUSUM_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+
 export const fetchAllAdusums = () => async (dispatch, getState) => { 
   const { access } = getState().auth;
 

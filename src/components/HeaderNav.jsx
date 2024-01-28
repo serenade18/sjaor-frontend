@@ -23,7 +23,9 @@ function HeaderNav({ user }) {
       '/admin/products': 'Products',
       '/admin/shukran': 'Shukran Magazine',
       '/admin/addprayers': 'Add Popes Prayer Intention',
-      '/admin/addevent': 'Add Event'
+      '/admin/addevent': 'Add Event',
+      '/admin/addarchivium': 'Add Archivium',
+      '/admin/addproduct': 'Add Product',
     };
 
     if (id) {
@@ -36,10 +38,10 @@ function HeaderNav({ user }) {
         return 'Edit Popes Prayer ';
       } else if (location.pathname.includes('editevent')) {
         return 'Edit Event';
-      } else if (location.pathname.includes('download-invoice')) {
-        return 'Downlaod Invoice'; 
-      } else if (location.pathname.includes('employeedetails')) {
-        return 'Edit Employee'; 
+      } else if (location.pathname.includes('editarchivium')) {
+        return 'Edit Archivium'; 
+      } else if (location.pathname.includes('editproduct')) {
+        return 'Edit Product'; 
       }
     } else {
       // Otherwise, handle static routes with the routeToPageName object
