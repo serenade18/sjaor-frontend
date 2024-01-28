@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
-import { fetchAllNews, deleteNews } from '../../actions/auth';
+import { fetchAllArchivium, deleteArchivium } from '../../actions/auth';
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 
@@ -11,10 +11,10 @@ const truncateText = (text, lines) => {
     return truncatedText;
   };
 
-const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
+const Archivium = ({ isAuthenticated, fetchAllArchivium, deleteArchivium, archivium, user }) => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const newsPerPage = 24;
+    const archiviumPerPage = 24;
     const maxPagesDisplayed = 5;
 
     const desktopStyle = {
@@ -32,27 +32,36 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
 
     useEffect(() => {
         if (isAuthenticated) {
-            // Fetch customer data only if authenticated
-                fetchAllNews();
+            const fetchData = async () => {
+                try {
+                    const archivum = await fetchAllArchivium();
+
+                    if (archivum && archivum) {
+                        const archivumData = archivum
+                        console.log('Fetched Data', archivumData)
+                    }
+                } catch (error) {
+                    console.error('Error fetching news data', error)
+                }
+            }
+
+            fetchData()
+                
         } else {
             // navigate('/');
         }
-    }, [isAuthenticated, navigate, fetchAllNews]);
+    }, [isAuthenticated, navigate, fetchAllArchivium]);
 
     if (!isAuthenticated) {
         navigate('/');
     } 
 
-    const viewNews = (news_id) => {
-        navigate('/admin/newsdetails/' + news_id);
+    const EditArchivium = (archivium_id) => {
+        navigate('/admin/editarchivium/' + archivium_id);
     };
 
-    const EditNews = (news_id) => {
-        navigate('/admin/edit-news/' + news_id);
-    };
-
-    const handleDelete = async (news_id) => {
-        const confirmed = window.confirm('Are you sure you want to delete this News Article?');
+    const handleDelete = async (archivium_id) => {
+        const confirmed = window.confirm('Are you sure you want to delete this Archivum Article?');
 
         if (!confirmed) {
             swal.fire({
@@ -64,33 +73,33 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
         }
 
         try {
-            await deleteNews(news_id);
-            await fetchAllNews();
+            await deleteArchivium(archivium_id);
+            await fetchAllArchivium();
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'News deleted successfully!',
+                text: 'Archivium deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete News Article. Please try again.',
+                text: 'Failed to delete Archivium Article. Please try again.',
             });
         }
     };
  
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredNews = news
-    ? news.filter((news) =>
-          news.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredArchivium = archivium
+    ? archivium.filter((archivium) =>
+          archivium.avm_title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
-    const indexOfLastNews = currentPage * newsPerPage;
-    const indexOfFirstNews = indexOfLastNews - newsPerPage;
-    const currentNews = filteredNews.slice(indexOfFirstNews, indexOfLastNews);
+    const indexOfLastArchivum = currentPage * archiviumPerPage;
+    const indexOfFirstArchivum = indexOfLastArchivum - archiviumPerPage;
+    const currentArchivium = filteredArchivium.slice(indexOfFirstArchivum, indexOfLastArchivum);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -98,7 +107,7 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
 
     const startPage = Math.max(1, currentPage - Math.floor(maxPagesDisplayed / 2));
     const endPage = Math.min(
-        Math.ceil(filteredNews.length / newsPerPage),
+        Math.ceil(filteredArchivium.length / archiviumPerPage),
         startPage + maxPagesDisplayed - 1
     );
 
@@ -136,7 +145,7 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                             </div>
                                         </div>
                                         <div className="dataTable-container">
-                                            {filteredNews.length > 0 ? (
+                                            {filteredArchivium.length > 0 ? (
                                                 <table className="table table-flush dataTable-table" id="datatable-search">
                                                     <thead className="thead-light">
                                                         <tr>
@@ -160,6 +169,11 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                                                     Body
                                                                 </a>
                                                             </th>
+                                                            <th data-sortable="" style={{ width: '10.6114%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    Video Link
+                                                                </a>
+                                                            </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Added on
@@ -179,47 +193,39 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                                     </thead>
 
                                                     <tbody>
-                                                        {currentNews.length > 0 ? (
-                                                            currentNews.map((news) => (
-                                                                <tr key={news.id}>
+                                                        {currentArchivium.length > 0 ? (
+                                                            currentArchivium.map((archivium) => (
+                                                                <tr key={archivium.id}>
                                                                     <td>
                                                                         <div className="d-flex align-items-center">
-                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{news.id}</p>
+                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{archivium.id}</p>
                                                                         </div>
                                                                     </td>
                                                                     <td className="font-weight-bold">
-                                                                        <span className="my-2 text-xs">{news.title}</span>
+                                                                        <span className="my-2 text-xs">{archivium.avm_title}</span>
                                                                     </td>
                                                                     <td className="w-20">
                                                                         <img
                                                                         className="w-100 h-50 border-radius-sm img-fluid" 
-                                                                            src={news.image}
+                                                                            src={archivium.avm_picture}
                                                                         />
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
-                                                                        <span className="my-2 text-xs">{truncateText(news.body, 8)}</span>
+                                                                        <span className="my-2 text-xs">{truncateText(archivium.avm_body, 8)}</span>
+                                                                    </td>
+                                                                    <td className="text-xs font-weight-bold">
+                                                                        <span className="my-2 text-xs">{truncateText(archivium.avm_video, 4)}</span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">
-                                                                            {new Date(news.added_on).toLocaleString()}
+                                                                            {new Date(archivium.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
-                                                                                className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => viewNews(news.id)}
-                                                                            >
-                                                                                <i className="fas fa-eye" aria-hidden="true"></i>
-                                                                            </button>
-                                                                            <span>View</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className="text-xs font-weight-bold">
-                                                                        <div className="d-flex align-items-center">
-                                                                            <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => EditNews(news.id)}
+                                                                                onClick={() => EditArchivium(archivium.id)}
                                                                             >
                                                                                 <i className="fa-regular fa-pen-to-square" aria-hidden="true"></i>
                                                                             </button>
@@ -230,7 +236,7 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => handleDelete(news.id)}
+                                                                                onClick={() => handleDelete(archivium.id)}
                                                                             >
                                                                             <i className="fas fa-times" aria-hidden="true"></i>
                                                                             </button>
@@ -254,7 +260,7 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                         </div>
 
                                         <div className="dataTable-bottom">
-                                            <div className="dataTable-info">Showing {filteredNews.length} entries</div>
+                                            <div className="dataTable-info">Showing {filteredArchivium.length} entries</div>
                                             <nav className="dataTable-pagination">
                                                 <ul className="dataTable-pagination-list">
                                                     <li className="pager">
@@ -276,7 +282,7 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
                                                             </a>
                                                         </li>
                                                     ))}
-                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredNews.length / newsPerPage) && (
+                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredArchivium.length / archiviumPerPage) && (
                                                         <li className="pager">
                                                             <a
                                                                 href="#"
@@ -304,14 +310,14 @@ const Archivium = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) =>
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    news: state.auth.news,
+    archivium: state.auth.archivium,
     user: state.auth.user
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllNews: () => dispatch(fetchAllNews()),
-        deleteNews: (news_id) => dispatch(deleteNews(news_id)),
+        fetchAllArchivium: () => dispatch(fetchAllArchivium()),
+        deleteArchivium: (archivium_id) => dispatch(deleteArchivium(archivium_id)),
     };
 };
 

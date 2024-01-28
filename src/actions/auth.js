@@ -24,6 +24,20 @@ import {
     SAVE_ADUSUM_SUCCESS, SAVE_ADUSUM_FAIL,
     EDIT_ADUSUM_SUCCESS, EDIT_ADUSUM_FAIL,
 
+    // Archivium
+    ARCHIVIUM_FETCH_ALL_SUCCESS, ARCHIVIUM_FETCH_ALL_FAIL,
+    ARCHIVIUM_FETCH_DETAILS_SUCCESS, ARCHIVIUM_FETCH_DETAILS_FAIL,
+    ARCHIVIUM_DELETE_SUCCESS, ARCHIVIUM_DELETE_FAIL, ARCHIVIUM_UPDATE_LIST,
+    SAVE_ARCHIVIUM_SUCCESS, SAVE_ARCHIVIUM_FAIL,
+    EDIT_ARCHIVIUM_SUCCESS, EDIT_ARCHIVIUM_FAIL,
+     
+    // Products
+    PRODUCTS_FETCH_ALL_SUCCESS, PRODUCTS_FETCH_ALL_FAIL,
+    PRODUCTS_FETCH_DETAILS_SUCCESS, PRODUCTS_FETCH_DETAILS_FAIL,
+    PRODUCTS_DELETE_SUCCESS, PRODUCTS_DELETE_FAIL, PRODUCTS_UPDATE_LIST,
+    SAVE_PRODUCTS_SUCCESS, SAVE_PRODUCTS_FAIL,
+    EDIT_PRODUCTS_SUCCESS, EDIT_PRODUCTS_FAIL,
+
     // News
     NEWS_FETCH_ALL_SUCCESS, NEWS_FETCH_ALL_FAIL,
     NEWS_FETCH_DETAILS_SUCCESS, NEWS_FETCH_DETAILS_FAIL,
@@ -887,6 +901,166 @@ export const editNews = (formData, id) => async (dispatch, getState) => {
     });
     return { success: false, error: 'Network error' };
   }
+};
+
+// Api Handler for Archivium
+
+export const fetchAllArchivium = () => async (dispatch, getState) => { 
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/archivum/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const archiviumData = response.data;
+      dispatch({
+        type: ARCHIVIUM_FETCH_ALL_SUCCESS,
+        payload: archiviumData,
+      });
+    } else {
+      dispatch({
+        type: ARCHIVIUM_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching ARCHIVIUM data:", error);
+    dispatch({
+      type: ARCHIVIUM_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteArchivium = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/archivum/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: ARCHIVIUM_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: ARCHIVIUM_UPDATE_LIST, payload: id }); // Send the deleted ARCHIVIUM ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: ARCHIVIUM_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: ARCHIVIUM_DELETE_FAIL });
+  }
+};
+
+export const fetchArchiviumDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/archivum/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const archiviumData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: ARCHIVIUM_FETCH_DETAILS_SUCCESS,
+        payload: archiviumData,
+      });
+      return archiviumData
+    } else {
+      dispatch({
+        type: ARCHIVIUM_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching ARCHIVIUM data:", error);
+    dispatch({
+      type: ARCHIVIUM_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveArchivium = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/archivum/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_ARCHIVIUM_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_ARCHIVIUM_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editArchivium = (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/archivum/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const archiviumData = response.data;
+      dispatch({
+          type: EDIT_ARCHIVIUM_SUCCESS,
+          payload: archiviumData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_ARCHIVIUM_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_ARCHIVIUM_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
 };
 
 // Api Handler for Catalogues
@@ -1914,6 +2088,166 @@ try {
 } catch (error) {
   dispatch({
     type: EDIT_EVENTS_FAIL, // Change this to the correct action type
+  });
+  return { success: false, error: 'Network error' };
+}
+};
+
+// Api Handler for Products
+
+export const fetchAllProducts = () => async (dispatch, getState) => { 
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/products/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const productData = response.data;
+      dispatch({
+        type: PRODUCTS_FETCH_ALL_SUCCESS,
+        payload: productData,
+      });
+    } else {
+      dispatch({
+        type: PRODUCTS_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching PRODUCTS data:", error);
+    dispatch({
+      type: PRODUCTS_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteProducts = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/products/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: PRODUCTS_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: PRODUCTS_UPDATE_LIST, payload: id }); // Send the deleted PRODUCTS ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: PRODUCTS_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: PRODUCTS_DELETE_FAIL });
+  }
+};
+
+export const fetchProductDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/products/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const productData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: PRODUCTS_FETCH_DETAILS_SUCCESS,
+        payload: productData,
+      });
+      return productData
+    } else {
+      dispatch({
+        type: PRODUCTS_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching PRODUCTS data:", error);
+    dispatch({
+      type: PRODUCTS_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveProducts = (formData) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+    const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/products/`,
+    formData,
+          {
+              headers: {
+                  Authorization: `Bearer ${access}`,
+                  'Content-Type': 'multipart/form-data',
+              }
+          }
+      );
+
+    if (response.status === 201) {
+        const data = await res.json();
+        dispatch({
+          type: SAVE_PRODUCTS_SUCCESS,
+          payload: data
+        });
+        console.log(data)
+        return { success: true, data };
+    } else {
+        const error = await res.json();
+        dispatch({
+          type: SAVE_PRODUCTS_FAIL,
+          payload: error
+        });
+        return { success: false, error };
+    }
+} catch (error) {
+    return { success: false, error: 'Network error' };
+}
+}  
+
+export const editProducts= (formData, id) => async (dispatch, getState) => {
+const { access } = getState().auth;
+
+try {
+  const response = await Axios.put(
+    `${import.meta.env.VITE_REACT_APP_API_URL}/api/products/${id}/`,
+    formData,
+    {
+        headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+);
+
+  if (response.status === 201) {
+      const productData = response.data;
+      dispatch({
+          type: EDIT_PRODUCTS_SUCCESS,
+          payload: productData,
+      });
+  } else {
+    const error = await res.json();
+    dispatch({
+      type: EDIT_PRODUCTS_FAIL,
+      payload: error,
+    });
+    return { success: false, error };
+  }
+} catch (error) {
+  dispatch({
+    type: EDIT_PRODUCTS_FAIL, // Change this to the correct action type
   });
   return { success: false, error: 'Network error' };
 }

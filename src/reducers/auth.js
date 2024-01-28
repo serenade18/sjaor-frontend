@@ -21,6 +21,20 @@ import {
     ADUSUM_DELETE_SUCCESS, ADUSUM_DELETE_FAIL, ADUSUM_UPDATE_LIST,
     SAVE_ADUSUM_SUCCESS, SAVE_ADUSUM_FAIL,
     EDIT_ADUSUM_SUCCESS, EDIT_ADUSUM_FAIL,
+     
+    // Archivium
+    ARCHIVIUM_FETCH_ALL_SUCCESS, ARCHIVIUM_FETCH_ALL_FAIL,
+    ARCHIVIUM_FETCH_DETAILS_SUCCESS, ARCHIVIUM_FETCH_DETAILS_FAIL,
+    ARCHIVIUM_DELETE_SUCCESS, ARCHIVIUM_DELETE_FAIL, ARCHIVIUM_UPDATE_LIST,
+    SAVE_ARCHIVIUM_SUCCESS, SAVE_ARCHIVIUM_FAIL,
+    EDIT_ARCHIVIUM_SUCCESS, EDIT_ARCHIVIUM_FAIL,
+     
+    // Products
+    PRODUCTS_FETCH_ALL_SUCCESS, PRODUCTS_FETCH_ALL_FAIL,
+    PRODUCTS_FETCH_DETAILS_SUCCESS, PRODUCTS_FETCH_DETAILS_FAIL,
+    PRODUCTS_DELETE_SUCCESS, PRODUCTS_DELETE_FAIL, PRODUCTS_UPDATE_LIST,
+    SAVE_PRODUCTS_SUCCESS, SAVE_PRODUCTS_FAIL,
+    EDIT_PRODUCTS_SUCCESS, EDIT_PRODUCTS_FAIL,
     
     // News
     NEWS_FETCH_ALL_SUCCESS, NEWS_FETCH_ALL_FAIL,
@@ -109,7 +123,11 @@ const initialState = {
     events: [],
     eventDetails: null,
     adusums: [],
-    adusumDetails: null
+    adusumDetails: null,
+    archivium: [],
+    archiviumDetails: null,
+    products: [],
+    productDetails: null,
 }
 
 export default function (state = initialState, action) {
@@ -301,6 +319,80 @@ export default function (state = initialState, action) {
             };
 
         case ADUSUM_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+        
+            // ARCHIVIUM
+
+        case SAVE_ARCHIVIUM_SUCCESS:
+            return {
+                ...state,
+                archivium: payload.data,
+            };
+
+        case SAVE_ARCHIVIUM_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_ARCHIVIUM_SUCCESS:
+            return {
+                ...state,
+                archivium: payload.data,
+            };
+
+        case EDIT_ARCHIVIUM_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_ARCHIVIUM_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case ARCHIVIUM_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                archivium: payload.data, // Store the fetched customer data
+            };
+
+        case ARCHIVIUM_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                archivium: [], // Handle the failure case
+            };
+
+        case ARCHIVIUM_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                archiviumDetails: payload, // Store the fetched ARCHIVIUM data
+            };
+
+        case ARCHIVIUM_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                archiviumDetails: [], // Store the fetched ARCHIVIUM data
+            };   
+        
+        case ARCHIVIUM_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updateAchivium = state.archivium.filter((archivium) => archivium.id !== payload);
+            return {
+                ...state,
+                archivium: updateAchivium,
+            };
+
+        case ARCHIVIUM_DELETE_SUCCESS: 
+            const updatedAchivium = state.archivium.filter(archivium => archivium.id !== payload.data);
+
+            return {
+                ...state,
+                archivium: updatedAchivium,
+            };
+
+        case ARCHIVIUM_DELETE_FAIL:
             return {
                 ...state,
             };    
@@ -931,6 +1023,80 @@ export default function (state = initialState, action) {
             };
 
         case EVENTS_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+        
+            // PRODUCTS
+
+        case SAVE_PRODUCTS_SUCCESS:
+            return {
+                ...state,
+                products: payload.data,
+            };
+
+        case SAVE_PRODUCTS_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_PRODUCTS_SUCCESS:
+            return {
+                ...state,
+                products: payload.data,
+            };
+
+        case EDIT_PRODUCTS_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_PRODUCTS_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case PRODUCTS_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                products: payload.data, // Store the fetched customer data
+            };
+
+        case PRODUCTS_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                products: [], // Handle the failure case
+            };
+
+        case PRODUCTS_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                productDetails: payload, // Store the fetched PRODUCTS data
+            };
+
+        case PRODUCTS_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                productDetails: [], // Store the fetched PRODUCTS data
+            };   
+        
+        case PRODUCTS_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updateProduct = state.products.filter((products) => products.id !== payload);
+            return {
+                ...state,
+                products: updateProduct,
+            };
+
+        case PRODUCTS_DELETE_SUCCESS: 
+            const updatedProduct = state.products.filter(products => products.id !== payload.data);
+
+            return {
+                ...state,
+                products: updatedProduct,
+            };
+
+        case PRODUCTS_DELETE_FAIL:
             return {
                 ...state,
             };    

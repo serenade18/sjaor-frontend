@@ -269,7 +269,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
-                                                                                className={`btn ${adusums.status ? 'btn-success' : 'bg-gradient-blue'} mb-0 me-2 btn-sm text-white d-flex align-items-center justify-content-center`}
+                                                                                className={`btn ${adusums.status ? 'btn-dark' : 'bg-gradient-danger'} mb-0 me-2 btn-sm text-white d-flex align-items-center justify-content-center`}
                                                                                 onClick={() => verifyAdusum(adusums.id)}
                                                                             >
                                                                                 <i className="fa-regular fa-pen-to-square text-white" aria-hidden="true"></i> 

@@ -11,7 +11,7 @@ const AddNews = ({ isAuthenticated, saveNews }) => {
     useEffect(() => {
         if (!isAuthenticated) {
           navigate('/');
-        }
+        } 
     }, [isAuthenticated, navigate]);
 
     const desktopStyle = {
