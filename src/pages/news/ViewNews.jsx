@@ -37,6 +37,8 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
     // Apply media queries
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
+    const regex = /(<([^>]+)>)/ig;
+
     return (
         <div>
             <HeaderNav/>
@@ -78,7 +80,7 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                                             </label>
                                             
                                             <p className="bg-gray-201 mt-4 text-dark text-sm">
-                                                {newsDetails ? newsDetails.body : ''}
+                                                {newsDetails ? newsDetails.body.replace(regex, '') : ''}
                                             </p>
                                             <p className='text-dark text-lg '>
                                               Authored By : {newsDetails ? newsDetails.author : ''}

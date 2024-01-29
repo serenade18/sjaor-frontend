@@ -109,7 +109,7 @@ const dashboardSection = ({ isAuthenticated, user, fetchDashboard }) => {
                     <div className="col-lg-3 col-md-6 col-12">
                         <div className="card bg-gray-901 mb-4">
                             <div className="card-body p-3">
-                                <div className="row cursor-pointer" onClick={() => navigate('/admin/products')}>
+                                <div className="row cursor-pointer" onClick={() => navigate('/admin/events')}>
                                     <div className="col-4 text-end">
                                         <div className="icon icon-shape bg-gradient-success shadow-success text-center">
                                             <i className="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>

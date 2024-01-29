@@ -102,6 +102,8 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
         startPage + maxPagesDisplayed - 1
     );
 
+    const regex = /(<([^>]+)>)/ig;
+
     return (
         <div>
             <HeaderNav/>
@@ -197,7 +199,7 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
                                                                         />
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
-                                                                        <span className="my-2 text-xs">{truncateText(news.body, 8)}</span>
+                                                                        <span className="my-2 text-xs">{truncateText(news.body.replace(regex, ''), 8)}</span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">

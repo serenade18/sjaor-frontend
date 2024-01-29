@@ -102,6 +102,8 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
         }
     };
 
+    const regex = /(<([^>]+)>)/ig;
+
     return (
         <div>
             <HeaderNav />
@@ -162,7 +164,7 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
                                                     className="form-control bg-gray-201 mt-4 text-dark text-sm"
                                                     placeholder="Type / Paste your news article here....."
                                                     name="body"
-                                                    value={formData.body}
+                                                    value={formData.body.replace(regex, '')}
                                                     onChange={(e) => setFormData({ ...formData, body: e.target.value })}
                                                     required
                                                     rows="8"
