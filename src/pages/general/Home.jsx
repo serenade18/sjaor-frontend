@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import HeaderNav from '../../components/HeaderNav'
 import DashboardSection from './dashboard/dashboardSection'
 
-const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums }) => {
+const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums, user }) => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const adusumsPerPage = 24;
@@ -257,6 +257,7 @@ const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums }) => {
                                                                             {new Date(adusums.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
+                                                                    {user && user.user_type === 'admin' && (
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
@@ -268,6 +269,8 @@ const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums }) => {
                                                                             </button>
                                                                         </div>
                                                                     </td>
+                                                                    )}
+                                                                    {user && user.user_type === 'admin' && (
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
@@ -279,6 +282,7 @@ const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums }) => {
                                                                             <span>Delete</span>
                                                                         </div>
                                                                     </td>
+                                                                    )}
                                                                 </tr>
                                                             ))
                                                         ) : ( 

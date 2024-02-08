@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 import HeaderNav from '../../components/HeaderNav';
 
-const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, editAdusums  }) => {
+const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, editAdusums, user  }) => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const adusumsPerPage = 24;
@@ -266,6 +266,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                             {new Date(adusums.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
+                                                                    {user && user.user_type === 'admin' && (
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
@@ -277,6 +278,8 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                             </button>
                                                                         </div>
                                                                     </td>
+                                                                    )}
+                                                                    {user && user.user_type === 'admin' && (
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
@@ -288,6 +291,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                             <span>Delete</span>
                                                                         </div>
                                                                     </td>
+                                                                    )}
                                                                 </tr>
                                                             ))
                                                         ) : ( 
