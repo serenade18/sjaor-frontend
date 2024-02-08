@@ -115,17 +115,36 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
         formDataToSend.append('catalogue_name', formData.catalogue_name);
         formDataToSend.append('catalogue_file', formData.catalogue_file);
 
+        // Show starting notification
+        const startToastId = toast.info('Uploading Catalogue...', {
+            position: 'top-right',
+            autoClose: false,
+            hideProgressBar: false,
+        });
+    
+        // Function to handle progress updates
+        const handleProgress = (progress) => {
+            // Update the existing toast with progress information
+            toast.update(startToastId, {
+                render: `Uploading Play... ${progress.toFixed(2)}%`,
+                autoClose: false,
+            });
+        };
+
         try {
-            const response = await saveCatalogues(formDataToSend);
+            const response = await saveCatalogues(formDataToSend, handleProgress);
             console.log(response);
 
-            // console.log('News posted successfully');
             // Show success toast
             toast.success('Catalogue added successfully', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
             });
+            
+            // Close the starting notification toast
+            toast.dismiss(startToastId);
+
             fetchAllCatalogues();
 
         } catch (error) {
@@ -136,6 +155,10 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                 autoClose: 3000,
                 hideProgressBar: false,
             });
+            
+            // Close the starting notification toast
+            toast.dismiss(startToastId);
+            
             return;
         }
     };

@@ -92,7 +92,7 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
     )
 }

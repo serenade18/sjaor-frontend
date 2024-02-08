@@ -144,9 +144,9 @@ const Login = ({ login, isAuthenticated, user }) => {
                                                     />
                                                     <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
                                                 </div>
-                                                <div className="form-check-label text-start mt-2">
+                                                {/* <div className="form-check-label text-start mt-2">
                                                     Forgot password? <Link to="/reset-password" className="text-dark font-weight-bolder">Reset</Link>
-                                                </div>
+                                                </div> */}
                                                 <div className="text-center">
                                                     <button 
                                                         type="submit" 
@@ -157,9 +157,9 @@ const Login = ({ login, isAuthenticated, user }) => {
                                                         {loading ? 'Signing In...' : 'Sign in'}
                                                     </button>
                                                 </div>
-                                                <div className="form-check-label text-start mt-2">
+                                                {/* <div className="form-check-label text-start mt-2">
                                                     Don't have an account? <Link to="/signup" className="text-dark font-weight-bolder">Sign Up</Link>
-                                                </div>
+                                                </div> */}
                                             </form>
                                         </div>
                                     </div>

@@ -1161,7 +1161,12 @@ try {
               headers: {
                   Authorization: `Bearer ${access}`,
                   'Content-Type': 'multipart/form-data',
-              }
+              },
+              onUploadProgress: (progressEvent) => {
+                  const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                  // Call the progress handler
+                  progressCallback(progress);
+              },
           }
       );
 

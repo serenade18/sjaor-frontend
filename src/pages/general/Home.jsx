@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import HeaderNav from '../../components/HeaderNav'
 import DashboardSection from './dashboard/dashboardSection'
 
-const Home = ({ isAuthenticated, fetchAdusums, adusums }) => {
+const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums }) => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const adusumsPerPage = 24;
