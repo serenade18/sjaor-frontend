@@ -14,6 +14,7 @@ function HeaderNav({ user }) {
       '/admin/users': 'Users',
       '/admin/adusums': 'Adusums',
       '/admin/news': 'News',
+      '/admin/addnews': 'Add News',
       '/admin/events': 'Events',
       '/admin/documents': 'Documents',
       '/admin/catalogues': 'Catalogues',

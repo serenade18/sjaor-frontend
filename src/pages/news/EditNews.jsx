@@ -76,23 +76,60 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
         });
     };
 
+    // const handleFormSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     try {
+    //         await editNews(formData, id);
+
+    //         // Show success toast
+    //         toast.success('News updated successfully', {
+    //             position: 'top-right',
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //         });
+
+    //         navigate('/admin/news');
+    //     } catch (error) {
+    //         console.error('Error updating news', error.message);
+
+    //         // Show error toast
+    //         toast.error('Error updating news. Please try again.', {
+    //             position: 'top-right',
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //         });
+    //     }
+    // };
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+    
+        // Split the body content into paragraphs
+        const paragraphs = formData.body.split('\n');
+    
+        // Add <p> tags to each paragraph
+        const formattedBody = paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('');
+    
+        // Update the formData with the formatted body
+        const updatedFormData = {
+            ...formData,
+            body: formattedBody,
+        };
+    
         try {
-            await editNews(formData, id);
-
+            await editNews(id, updatedFormData);
+    
             // Show success toast
             toast.success('News updated successfully', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-
+    
             navigate('/admin/news');
         } catch (error) {
             console.error('Error updating news', error.message);
-
+    
             // Show error toast
             toast.error('Error updating news. Please try again.', {
                 position: 'top-right',
@@ -101,6 +138,7 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
             });
         }
     };
+    
 
     const regex = /(<([^>]+)>)/ig;
 

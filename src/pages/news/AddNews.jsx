@@ -44,19 +44,30 @@ const AddNews = ({ isAuthenticated, saveNews }) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+    
+        // Split the body content into paragraphs
+        const paragraphs = formData.body.split('\n');
+    
+        // Add <p> tags to each paragraph
+        const formattedBody = paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('');
+    
+        // Update the formData with the formatted body
+        const updatedFormData = {
+            ...formData,
+            body: formattedBody,
+        };
+    
         const formDataToSend = new FormData();
-
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('image', formData.image);
-        formDataToSend.append('body', formData.body);
-        formDataToSend.append('author', formData.author);
-
+    
+        formDataToSend.append('title', updatedFormData.title);
+        formDataToSend.append('image', updatedFormData.image);
+        formDataToSend.append('body', updatedFormData.body);
+        formDataToSend.append('author', updatedFormData.author);
+    
         try {
             const response = await saveNews(formDataToSend);
             console.log(response);
-
-            // console.log('News posted successfully');
+    
             // Show success toast
             toast.success('News posted successfully', {
                 position: 'top-right',
@@ -64,11 +75,11 @@ const AddNews = ({ isAuthenticated, saveNews }) => {
                 hideProgressBar: false,
             });
             navigate('/admin/news');
-
+    
         } catch (error) {
-            console.error('Error posting play', error.message);
+            console.error('Error posting news', error.message);
             // Show error toast
-            toast.error('Error posting play. Please try again.', {
+            toast.error('Error posting news. Please try again.', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -76,6 +87,7 @@ const AddNews = ({ isAuthenticated, saveNews }) => {
             return;
         }
     };
+    
 
     return (
         <div>
