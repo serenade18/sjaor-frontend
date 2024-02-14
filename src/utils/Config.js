@@ -39,6 +39,12 @@ class Config{
         },
         {
             index: "6",
+            title: "Necrology",
+            url: "/admin/necrologies",
+            icons: "fi fi-rr-layers text-lg text-white"
+        },
+        {
+            index: "6",
             title: "Catalogues",
             url: "/admin/catalogues",
             icons: "fi fi-br-file-user text-lg text-white"

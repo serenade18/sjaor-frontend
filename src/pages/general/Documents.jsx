@@ -180,7 +180,7 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
     };
 
     const handleDelete = async (documents_id) => {
-        const confirmed = window.confirm('Are you sure you want to delete this Catalogue?');
+        const confirmed = window.confirm('Are you sure you want to delete this Document?');
 
         if (!confirmed) {
             swal.fire({
@@ -197,13 +197,13 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'News deleted successfully!',
+                text: 'Document deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete News Article. Please try again.',
+                text: 'Failed to delete Document. Please try again.',
             });
         }
     };

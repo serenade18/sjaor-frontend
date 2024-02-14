@@ -68,7 +68,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
     
 
     const handleDelete = async (news_id) => {
-        const confirmed = window.confirm('Are you sure you want to delete this News Article?');
+        const confirmed = window.confirm('Are you sure you want to delete this Adusum?');
 
         if (!confirmed) {
             swal.fire({
@@ -85,13 +85,13 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'News deleted successfully!',
+                text: 'Adusum deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete News Article. Please try again.',
+                text: 'Failed to delete Adusum. Please try again.',
             });
         }
     };

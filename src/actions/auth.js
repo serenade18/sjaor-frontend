@@ -30,6 +30,13 @@ import {
     ARCHIVIUM_DELETE_SUCCESS, ARCHIVIUM_DELETE_FAIL, ARCHIVIUM_UPDATE_LIST,
     SAVE_ARCHIVIUM_SUCCESS, SAVE_ARCHIVIUM_FAIL,
     EDIT_ARCHIVIUM_SUCCESS, EDIT_ARCHIVIUM_FAIL,
+
+    // NECROLOGY
+    NECROLOGY_FETCH_ALL_SUCCESS, NECROLOGY_FETCH_ALL_FAIL,
+    NECROLOGY_FETCH_DETAILS_SUCCESS, NECROLOGY_FETCH_DETAILS_FAIL,
+    NECROLOGY_DELETE_SUCCESS, NECROLOGY_DELETE_FAIL, NECROLOGY_UPDATE_LIST,
+    SAVE_NECROLOGY_SUCCESS, SAVE_NECROLOGY_FAIL,
+    EDIT_NECROLOGY_SUCCESS, EDIT_NECROLOGY_FAIL,
      
     // Products
     PRODUCTS_FETCH_ALL_SUCCESS, PRODUCTS_FETCH_ALL_FAIL,
@@ -2256,4 +2263,165 @@ try {
   });
   return { success: false, error: 'Network error' };
 }
+};
+
+// Api Handler for Necrology
+
+export const fetchAllNecrology = () => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    // Make an HTTP GET request to fetch NEWS data using the environment variable
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/necrology/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const necrologyData = response.data;
+      dispatch({
+        type: NECROLOGY_FETCH_ALL_SUCCESS,
+        payload: necrologyData,
+      });
+    } else {
+      dispatch({
+        type: NECROLOGY_FETCH_ALL_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NECROLOGY data:", error);
+    dispatch({
+      type: NECROLOGY_FETCH_ALL_FAIL,
+    });
+  }
+};
+
+export const deleteNecrology = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const response = await Axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/necrology/${id}/`, {
+          headers: {
+              Authorization: `Bearer ${access}`,
+          },
+      });
+
+      if (response.status === 200) {
+          // Dispatch a success action if the delete was successful
+          dispatch({ type: NECROLOGY_DELETE_SUCCESS });
+
+          // Dispatch an action to update the customer list
+          dispatch({ type: NECROLOGY_UPDATE_LIST, payload: id }); // Send the deleted NECROLOGY ID
+      } else {
+          // Dispatch a failure action if the delete failed
+          dispatch({ type: NECROLOGY_DELETE_FAIL });
+      }
+  } catch (error) {
+      console.log(error);
+      dispatch({ type: NECROLOGY_DELETE_FAIL });
+  }
+};
+
+export const fetchNecrologyDetails = (id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/necrology/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const necrologyData = response.data.data; // Access data from the "data" key
+      dispatch({
+        type: NECROLOGY_FETCH_DETAILS_SUCCESS,
+        payload: necrologyData,
+      });
+      return necrologyData
+    } else {
+      dispatch({
+        type: NECROLOGY_FETCH_DETAILS_FAIL,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching NECROLOGY data:", error);
+    dispatch({
+      type: NECROLOGY_FETCH_DETAILS_FAIL,
+    });
+  }
+};
+
+export const saveNecrology = (formData) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+      const res = await Axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/necrology/`,
+      formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${access}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            }
+        );
+
+      if (res.status === 201) {
+          const data = await res.data;
+          dispatch({
+            type: SAVE_NECROLOGY_SUCCESS,
+            payload: data
+          });
+          console.log(data)
+          return data;
+      } else {
+          dispatch({
+            type: SAVE_NECROLOGY_FAIL,
+          });
+      }
+  } catch (error) {
+    console.error('Error posting Docs:', error);
+    dispatch({
+      type: SAVE_NECROLOGY_FAIL,
+    });
+    throw error;
+  }
+}  
+
+export const editNecrology = (formData, id) => async (dispatch, getState) => {
+  const { access } = getState().auth;
+
+  try {
+    const response = await Axios.put(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/api/necrology/${id}/`,
+      formData,
+      {
+          headers: {
+              Authorization: `Bearer ${access}`,
+              'Content-Type': 'multipart/form-data',
+          }
+      }
+  );
+
+    if (response.status === 201) {
+        const necrologyData = response.data;
+        dispatch({
+            type: EDIT_NECROLOGY_SUCCESS,
+            payload: necrologyData,
+        });
+    } else {
+      const error = await res.json();
+      dispatch({
+        type: EDIT_NECROLOGY_FAIL,
+        payload: error,
+      });
+      return { success: false, error };
+    }
+  } catch (error) {
+    dispatch({
+      type: EDIT_NECROLOGY_FAIL, // Change this to the correct action type
+    });
+    return { success: false, error: 'Network error' };
+  }
 };

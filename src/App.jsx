@@ -23,6 +23,7 @@ const Documents = lazy(() => import('./pages/general/Documents'));
 const Catalogues = lazy(() => import('./pages/general/Catalogues'));
 const Shukran = lazy(() => import('./pages/general/Shukran'));
 const IgnatianThoughts = lazy(() => import('./pages/general/IgnatianThoughts'));
+const Necrology = lazy(() => import('./pages/general/Necrology'));
 
 // News Routes
 const News = lazy(() => import('./pages/news/News'));
@@ -90,6 +91,7 @@ function App() {
               <Route exact path="/admin/catalogues" element={<Catalogues />}/>
               <Route exact path="/admin/shukran" element={<Shukran />}/>
               <Route exact path="/admin/ignatian-thoughts" element={<IgnatianThoughts />}/>
+              <Route exact path="/admin/necrologies" element={<Necrology />}/>
 
               {/* News */}
               <Route exact path="/admin/news" element={<News/>}/>

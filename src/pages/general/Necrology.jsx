@@ -3,13 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import HeaderNav from '../../components/HeaderNav'
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
+import { fetchAllNecrology, saveNecrology, deleteNecrology } from '../../actions/auth';
 import { toast } from 'react-toastify';
-import { fetchAllCatalogues, saveCatalogues, deleteCatalogues } from '../../actions/auth'
 
-const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatalogues, deleteCatalogues }) => {
+const Necrology = ({ isAuthenticated, fetchAllNecrology, necrology, saveNecrology, deleteNecrology }) => {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(1);
-    const cataloguesPerPage = 24;
+    const necrologyPerPage = 24;
     const maxPagesDisplayed = 5;
     const { id } = useParams();
     const formRef = useRef(null);
@@ -30,11 +30,11 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     useEffect(() => {
         if (isAuthenticated) {
             // Fetch customer data only if authenticated
-                fetchAllCatalogues();
+                fetchAllNecrology();
         } else {
             // navigate('/');
         }
-    }, [isAuthenticated, navigate, fetchAllCatalogues]);
+    }, [isAuthenticated, navigate, fetchAllNecrology]);
 
     if (!isAuthenticated) {
         navigate('/');
@@ -42,15 +42,15 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredCatalogues = catalogues
-    ? catalogues.filter((catalogues) =>
-          catalogues.catalogue_name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredNecrology = necrology
+    ? necrology.filter((necrology) =>
+          necrology.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
-    const indexOfLastCatalogues = currentPage * cataloguesPerPage;
-    const indexOfFirstCatalogues = indexOfLastCatalogues - cataloguesPerPage;
-    const currentCatalogues = filteredCatalogues.slice(indexOfFirstCatalogues, indexOfLastCatalogues);
+    const indexOfLastNecrology = currentPage * necrologyPerPage;
+    const indexOfFirstNecrology = indexOfLastNecrology - necrologyPerPage;
+    const currentNecrology = filteredNecrology.slice(indexOfFirstNecrology, indexOfLastNecrology);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -58,40 +58,19 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
     const startPage = Math.max(1, currentPage - Math.floor(maxPagesDisplayed / 2));
     const endPage = Math.min(
-        Math.ceil(filteredCatalogues.length / cataloguesPerPage),
+        Math.ceil(filteredNecrology.length / necrologyPerPage),
         startPage + maxPagesDisplayed - 1
     );
 
-    //  function to get the filename from the full path
-    const getFileName = (filePath) => {
-        const startIndex = filePath.lastIndexOf('/') + 1;
-        return filePath.substring(startIndex);
-    };
-
-    // Function to trigger pdf download
-    const downloadCatalogue = (catalogueId) => {
-        // Find the selected catalogue using the ID
-        const selectedCatalogue = catalogues.find(catalogue => catalogue.id === catalogueId);
-
-        // Ensure the catalogue is found
-        if (selectedCatalogue) {
-            // Use the catalogue_file to initiate the download
-            window.open(selectedCatalogue.catalogue_file, '_blank');
-        } else {
-            // Handle the case where the catalogue is not found
-            console.error('Catalogue not found');
-        }
-    };
-
     const [formData, setFormData] = useState({
-        catalogue_name: '',
-        catalogue_file: null,
+        year: '',
+        file: null,
+        name: '',
+        month: ''
     })
-
-    const [submitSuccess, setSubmitSuccess] = useState(false);
     
-    const [buttonText, setButtonText] = useState('Add Catalogue'); // Initial button text
-    const [isButtonDisabled, setButtonDisabled] = useState(false);
+    const [buttonText] = useState('Add Necrology'); // Initial button text
+    const [isButtonDisabled] = useState(false);
 
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -102,8 +81,10 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     const closeModal = () => {
         setModalOpen(false);
         setFormData({
-            catalogue_name: '',
-            catalogue_file: null,
+            year: '',
+            file: null,
+            name: '',
+            month: ''
         });
     };
 
@@ -112,40 +93,23 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
         const formDataToSend = new FormData();
 
-        formDataToSend.append('catalogue_name', formData.catalogue_name);
-        formDataToSend.append('catalogue_file', formData.catalogue_file);
-
-        // Show starting notification
-        const startToastId = toast.info('Uploading Catalogue...', {
-            position: 'top-right',
-            autoClose: false,
-            hideProgressBar: false,
-        });
-    
-        // Function to handle progress updates
-        const handleProgress = (progress) => {
-            // Update the existing toast with progress information
-            toast.update(startToastId, {
-                render: `Uploading Play... ${progress.toFixed(2)}%`,
-                autoClose: false,
-            });
-        };
+        formDataToSend.append('year', formData.year);
+        formDataToSend.append('month', formData.month);
+        formDataToSend.append('file', formData.file);
+        formDataToSend.append('name', formData.name);
 
         try {
-            const response = await saveCatalogues(formDataToSend, handleProgress);
+            const response = await saveNecrology(formDataToSend);
             console.log(response);
 
+            // console.log('News posted successfully');
             // Show success toast
-            toast.success('Catalogue added successfully', {
+            toast.success('Document posted successfully', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-            
-            // Close the starting notification toast
-            toast.dismiss(startToastId);
-
-            fetchAllCatalogues();
+            fetchAllNecrology()
 
         } catch (error) {
             console.error('Error posting play', error.message);
@@ -155,10 +119,6 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                 autoClose: 3000,
                 hideProgressBar: false,
             });
-            
-            // Close the starting notification toast
-            toast.dismiss(startToastId);
-            
             return;
         }
     };
@@ -167,11 +127,11 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
-            [name]: name === 'catalogue_file' ? files[0] : value,
+            [name]: name === 'file' ? files[0] : value,
         });
     };
 
-    const handleDelete = async (catalogues_id) => {
+    const handleDelete = async (necrology_id) => {
         const confirmed = window.confirm('Are you sure you want to delete this Catalogue?');
 
         if (!confirmed) {
@@ -184,19 +144,40 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
         }
 
         try {
-            await deleteCatalogues(catalogues_id);
-            await fetchAllCatalogues();
+            await deleteNecrology(necrology_id);
+            await fetchAllNecrology();
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Catalogue deleted successfully!',
+                text: 'Necrology deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete Catalogue. Please try again.',
+                text: 'Failed to delete Necrology. Please try again.',
             });
+        }
+    };
+
+    //  function to get the filename from the full path
+    const getFileName = (filePath) => {
+        const startIndex = filePath.lastIndexOf('/') + 1;
+        return filePath.substring(startIndex);
+    };
+
+    // Function to trigger pdf download
+    const downloadNecrology = (necrologyId) => {
+        // Find the selected document using the ID
+        const selectedNecrology = necrology.find(necrology => necrology.id === documentId);
+
+        // Ensure the document is found
+        if (selectedNecrology) {
+            // Use the file to initiate the download
+            window.open(selectedNecrology.file, '_blank');
+        } else {
+            // Handle the case where the document is not found
+            console.error('Necrology not found');
         }
     };
 
@@ -212,7 +193,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                 className="btn btn-outline-dark"
                                 onClick={openModal}
                             >
-                                <i className="fi fi-br-file-user"></i> New Catalogue
+                                <i className="fi fi-tr-memo-circle-check"></i> New Necrology
                             </button>
                             {isModalOpen && (
                                 <div
@@ -237,34 +218,69 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                         &times;
                                                         </span>
                                                         <h3 className="font-weight-bolder text-dark text-gradient">
-                                                        Add Catalogue
+                                                        Add Necrology
                                                         </h3>
                                                     </div>
                                                     <div className="card-body">
                                                         <form role="form text-left" ref={formRef} method="POST" onSubmit={handleFormSubmit}>
-                                                            <label>Catalogue Name</label>
+                                                            <label>Necrology Name</label>
                                                             <div className="input-group mb-3">
                                                                 <input
                                                                     type="text"
                                                                     className="form-control"
-                                                                    name="catalogue_name"
-                                                                    placeholder="Catalogue Name"
-                                                                    value={formData.catalogue_name}
-                                                                    onChange={(e) => setFormData({ ...formData, catalogue_name: e.target.value })}
+                                                                    name="name"
+                                                                    placeholder="Name"
+                                                                    value={formData.name}
+                                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                                     required
                                                                 />
                                                             </div>
-                                                            <label>Catalogue File</label>
+                                                            <label>File</label>
                                                             <div className="input-group mb-3">
                                                                 <input
                                                                     type="file"
-                                                                    name="catalogue_file"
+                                                                    name="file"
                                                                     className="form-control"
                                                                     onChange={handleInputChange}
                                                                     required
                                                                 />
                                                             </div>
-                                                            
+                                                            <label>Month</label>
+                                                            <div className='input-group'>
+                                                                <select 
+                                                                    className='form-control' 
+                                                                    name='month' 
+                                                                    placeholder='Month'
+                                                                    value={formData.month}
+                                                                    onChange={(e) =>setFormData({ ...formData, month: e.target.value })}
+                                                                >
+                                                                    <option value="">--- Choose Month---</option>
+                                                                    <option value="January">January</option>
+                                                                    <option value="February">February</option>
+                                                                    <option value="March">March</option>
+                                                                    <option value="April">April</option>
+                                                                    <option value="May">May</option>
+                                                                    <option value="June">June</option>
+                                                                    <option value="July">July</option>
+                                                                    <option value="August">August</option>
+                                                                    <option value="September">September</option>
+                                                                    <option value="October">October</option>
+                                                                    <option value="November">November</option>
+                                                                    <option value="December">December</option>
+                                                                </select>
+                                                            </div>
+                                                            <label>year</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="year"
+                                                                    placeholder="Year"
+                                                                    value={formData.year}
+                                                                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
                                                             <div className="text-center">
                                                                 <button
                                                                     type="submit"
@@ -284,9 +300,6 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                     </div>
                                 </div>
                             )}
-                        </div>
-                        <div className="d-flex">
-                           
                         </div>
                     </div>
 
@@ -308,7 +321,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                             </div>
                                         </div>
                                         <div className="dataTable-container">
-                                            {filteredCatalogues.length > 0 ? (
+                                            {filteredNecrology.length > 0 ? (
                                                 <table className="table table-flush dataTable-table" id="datatable-search">
                                                     <thead className="thead-light">
                                                         <tr>
@@ -325,6 +338,16 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                             <th data-sortable="" style={{ width: '24%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     File
+                                                                </a>
+                                                            </th>
+                                                            <th data-sortable="" style={{ width: '24%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    month
+                                                                </a>
+                                                            </th>
+                                                            <th data-sortable="" style={{ width: '24%' }}>
+                                                                <a href="#" className="dataTable-sorter text-dark">
+                                                                    year
                                                                 </a>
                                                             </th>
                                                             <th data-sortable="" style={{ width: '24%' }}>
@@ -346,32 +369,63 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                     </thead>
 
                                                     <tbody>
-                                                        {currentCatalogues.length > 0 ? (
-                                                            currentCatalogues.map((catalogues) => (
-                                                                <tr key={catalogues.id}>
+                                                        {currentNecrology.length > 0 ? (
+                                                            currentNecrology.map((necrology) => (
+                                                                <tr key={necrology.id}>
                                                                     <td>
                                                                         <div className="d-flex align-items-center">
-                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{catalogues.id}</p>
+                                                                            <p className="text-xs font-weight-bold ms-2 mb-0">#{necrology.id}</p>
                                                                         </div>
                                                                     </td>
                                                                     <td className="font-weight-bold">
-                                                                        <span className="my-2 text-xs">{catalogues.catalogue_name}</span>
+                                                                        <span className="my-2 text-xs">{necrology.name}</span>
                                                                     </td>
                                                                     <td className="w-20">
                                                                         <span className="my-2 text-xs">
-                                                                            <i className="fa-regular fa-file-pdf text-lg text-danger"></i> {getFileName(catalogues.catalogue_file)}
+                                                                            <i className="fa-regular fa-file-pdf text-lg text-danger"></i> {getFileName(necrology.file)}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="w-20">
+                                                                        <span className="my-2 text-xs">
+                                                                            {
+                                                                                necrology.month === 1
+                                                                                ? 'January'
+                                                                                : necrology.month === 2
+                                                                                ? 'February'
+                                                                                : necrology.month === 3
+                                                                                ? 'March'
+                                                                                : necrology.month === 4
+                                                                                ? 'April'
+                                                                                : necrology.month === 5
+                                                                                ? 'May'
+                                                                                : necrology.month === 6
+                                                                                ? 'June'
+                                                                                : necrology.month === 7
+                                                                                ? 'July'
+                                                                                : necrology.month === 8
+                                                                                ? 'August'
+                                                                                : necrology.month === 9
+                                                                                ? 'September'
+                                                                                : necrology.month === 10
+                                                                                ? 'October'
+                                                                                : necrology.month === 11
+                                                                                ? 'November'
+                                                                                : necrology.month === 12
+                                                                                ? 'December'
+                                                                                : necrology.month
+                                                                            }
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <span className="my-2 text-xs">
-                                                                            {new Date(catalogues.added_on).toLocaleString()}
+                                                                            {new Date(necrology.added_on).toLocaleString()}
                                                                         </span>
                                                                     </td>
                                                                     <td className="text-xs font-weight-bold">
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => downloadCatalogue(catalogues.id)}
+                                                                                onClick={() => downloadNecrology(necrology.id)}
                                                                             >
                                                                                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                                                                             </button>
@@ -382,7 +436,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                                         <div className="d-flex align-items-center">
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
-                                                                                onClick={() => handleDelete(catalogues.id)}
+                                                                                onClick={() => handleDelete(necrology.id)}
                                                                             >
                                                                             <i className="fas fa-times" aria-hidden="true"></i>
                                                                             </button>
@@ -406,7 +460,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                         </div>
 
                                         <div className="dataTable-bottom">
-                                            <div className="dataTable-info">Showing {filteredCatalogues.length} entries</div>
+                                            <div className="dataTable-info">Showing {filteredNecrology.length} entries</div>
                                             <nav className="dataTable-pagination">
                                                 <ul className="dataTable-pagination-list">
                                                     <li className="pager">
@@ -428,7 +482,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                             </a>
                                                         </li>
                                                     ))}
-                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredCatalogues.length / cataloguesPerPage) && (
+                                                    {currentPage + maxPagesDisplayed < Math.ceil(filteredNecrology.length / necrologyPerPage) && (
                                                         <li className="pager">
                                                             <a
                                                                 href="#"
@@ -456,16 +510,17 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    catalogues: state.auth.catalogues,
+    necrology: state.auth.necrology,
     user: state.auth.user
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCatalogues: () => dispatch(fetchAllCatalogues()),
-        saveCatalogues: (formData) => dispatch(saveCatalogues(formData)),
-        deleteCatalogues: (catalogues_id) => dispatch(deleteCatalogues(catalogues_id)),
+        fetchAllNecrology: () => dispatch(fetchAllNecrology()),
+        fetchDocumentOnly: () => dispatch(fetchDocumentOnly()),
+        saveNecrology: (formData) => dispatch(saveNecrology(formData)),
+        deleteNecrology: (necrology_id) => dispatch(deleteNecrology(necrology_id)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Catalogues)
+export default connect(mapStateToProps, mapDispatchToProps)(Necrology)

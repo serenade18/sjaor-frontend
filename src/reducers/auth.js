@@ -81,6 +81,13 @@ import {
     DOCUMENTS_DELETE_SUCCESS, DOCUMENTS_DELETE_FAIL, DOCUMENTS_UPDATE_LIST,
     SAVE_DOCUMENTS_SUCCESS, SAVE_DOCUMENTS_FAIL,
     EDIT_DOCUMENTS_SUCCESS, EDIT_DOCUMENTS_FAIL,
+
+    // NECROLOGY
+    NECROLOGY_FETCH_ALL_SUCCESS, NECROLOGY_FETCH_ALL_FAIL,
+    NECROLOGY_FETCH_DETAILS_SUCCESS, NECROLOGY_FETCH_DETAILS_FAIL,
+    NECROLOGY_DELETE_SUCCESS, NECROLOGY_DELETE_FAIL, NECROLOGY_UPDATE_LIST,
+    SAVE_NECROLOGY_SUCCESS, SAVE_NECROLOGY_FAIL,
+    EDIT_NECROLOGY_SUCCESS, EDIT_NECROLOGY_FAIL,
     
     //EVENT CATEGORIES
     EVENT_CATEGORY_FETCH_ALL_SUCCESS, EVENT_CATEGORY_FETCH_ALL_FAIL,
@@ -113,6 +120,8 @@ const initialState = {
     catalogueDetails: null,
     documents: [],
     documentDetails: null,
+    necrology: [],
+    necrologyDetails: null,
     documentCategories: [],
     shukran: [],
     shukranDetails: null,
@@ -1100,7 +1109,81 @@ export default function (state = initialState, action) {
             return {
                 ...state,
             };    
+            
+        // NECROLOGY
+
+        case SAVE_NECROLOGY_SUCCESS:
+            return {
+                ...state,
+                necrology: payload.data,
+            };
+
+        case SAVE_NECROLOGY_FAIL:
+            return{
+                ...state,
+            } ;
+
+        case EDIT_NECROLOGY_SUCCESS:
+            return {
+                ...state,
+                necrology: payload.data,
+            };
+
+        case EDIT_NECROLOGY_FAIL:
+            return {
+                ...state,
+            };
+
+        case SAVE_NECROLOGY_FAIL:
+            return{
+                ...state,
+            } ;   
+
+        case NECROLOGY_FETCH_ALL_SUCCESS:
+            return {
+                ...state,
+                necrology: payload.data, // Store the fetched customer data
+            };
+
+        case NECROLOGY_FETCH_ALL_FAIL:
+            return {
+                ...state,
+                necrology: [], // Handle the failure case
+            };
+
+        case NECROLOGY_FETCH_DETAILS_SUCCESS:
+            return {
+                ...state,
+                necrologyDetails: payload, // Store the fetched NECROLOGY data
+            };
+
+        case NECROLOGY_FETCH_DETAILS_FAIL:
+            return {
+                ...state,
+                necrologyDetails: [], // Store the fetched NECROLOGY data
+            };   
         
+        case NECROLOGY_UPDATE_LIST:
+            // Update the customer list by removing the deleted customer
+            const updatedNecrologies = state.necrology.filter((necrology) => necrology.id !== payload);
+            return {
+                ...state,
+                necrology: updatedNecrologies,
+            };
+
+        case NECROLOGY_DELETE_SUCCESS: 
+            const updatedNecrology = state.necrology.filter(necrology => necrology.id !== payload.data);
+
+            return {
+                ...state,
+                necrology: updatedNecrology,
+            };
+
+        case NECROLOGY_DELETE_FAIL:
+            return {
+                ...state,
+            };    
+          
         // Dashboard
         
         case DASHBOARD_FETCH_SUCCESS:

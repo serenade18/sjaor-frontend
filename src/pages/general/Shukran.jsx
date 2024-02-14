@@ -152,7 +152,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
     };
 
     const handleDelete = async (shukran_id) => {
-        const confirmed = window.confirm('Are you sure you want to delete this Catalogue?');
+        const confirmed = window.confirm('Are you sure you want to delete this issue?');
 
         if (!confirmed) {
             swal.fire({
@@ -169,13 +169,13 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
             swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'News deleted successfully!',
+                text: 'Snhukran deleted successfully!',
             });
         } catch (error) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete News Article. Please try again.',
+                text: 'Failed to delete Snhukran Issue. Please try again.',
             });
         }
     };
