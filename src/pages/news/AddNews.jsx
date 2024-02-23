@@ -10,7 +10,7 @@ const AddNews = ({ isAuthenticated, saveNews }) => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-          navigate('/');
+        //   navigate('/');
         } 
     }, [isAuthenticated, navigate]);
 

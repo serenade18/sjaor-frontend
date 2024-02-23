@@ -37,7 +37,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
     }, [isAuthenticated, navigate, fetchAllCatalogues]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const [searchQuery, setSearchQuery] = useState('');

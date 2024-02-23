@@ -34,7 +34,7 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
     }, [isAuthenticated, navigate, fetchAllAdusums]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const verifyAdusum = async (adusumId) => {
@@ -203,11 +203,6 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                     profile picture
                                                                 </a>
                                                             </th>
-                                                            <th data-sortable="" style={{ width: '24%' }}>
-                                                                <a href="#" className="dataTable-sorter text-dark">
-                                                                    Added on
-                                                                </a>
-                                                            </th>
                                                             <th data-sortable="" style={{ width: '15%' }}>
                                                                 <a href="#" className="dataTable-sorter text-dark">
                                                                     Action
@@ -260,11 +255,6 @@ const Adusums = ({ isAuthenticated, fetchAllAdusums, deleteAdusums, adusums, edi
                                                                         className="w-100 h-50 border-radius-sm img-fluid" 
                                                                             src={adusums.profile_picture}
                                                                         />
-                                                                    </td>
-                                                                    <td className="text-xs font-weight-bold">
-                                                                        <span className="my-2 text-xs">
-                                                                            {new Date(adusums.added_on).toLocaleString()}
-                                                                        </span>
                                                                     </td>
                                                                     {user && user.user_type === 'admin' && (
                                                                     <td className="text-xs font-weight-bold">

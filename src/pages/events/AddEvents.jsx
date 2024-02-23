@@ -11,7 +11,7 @@ const AddEvents = ({ isAuthenticated, saveEvents, fetchEventOnly }) => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-          navigate('/');
+        //   navigate('/');
         }
     }, [isAuthenticated, navigate]);
 

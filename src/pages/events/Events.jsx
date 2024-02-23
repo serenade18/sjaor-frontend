@@ -20,7 +20,7 @@ const Events = ({ isAuthenticated, saveEventCategory, events, fetchAllEvents, de
     }, [isAuthenticated, navigate, fetchAllEvents]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const desktopStyle = {

@@ -10,7 +10,7 @@ const ViewNews = ({ isAuthenticated, fetchNewsDetails, newsDetails }) => {
 
     useEffect(() => {
         if (!isAuthenticated && !id) {
-           navigate('/');
+        //    navigate('/');
         } else {
             async function fetchData() {
                 try {

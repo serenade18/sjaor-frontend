@@ -37,7 +37,7 @@ const Necrology = ({ isAuthenticated, fetchAllNecrology, necrology, saveNecrolog
     }, [isAuthenticated, navigate, fetchAllNecrology]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const [searchQuery, setSearchQuery] = useState('');

@@ -10,7 +10,7 @@ const AddArchivium = ({ isAuthenticated, saveArchivium }) => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-          navigate('/');
+        //   navigate('/');
         }
     }, [isAuthenticated, navigate]);
 

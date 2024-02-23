@@ -27,7 +27,7 @@ const EditProduct = ({ isAuthenticated, fetchProductDetails, editProducts }) => 
 
     useEffect(() => {
         if (!isAuthenticated && !id) {
-            navigate('/');
+            // navigate('/');
         } else {
             const fetchData = async () => {
                 try {

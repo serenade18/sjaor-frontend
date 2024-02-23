@@ -34,7 +34,7 @@ const Product = ({ isAuthenticated, fetchAllProducts, deleteProducts, products, 
     }, [isAuthenticated, navigate, fetchAllProducts]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const viewProducts = (products_id) => {

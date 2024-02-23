@@ -53,7 +53,7 @@ const Archivium = ({ isAuthenticated, fetchAllArchivium, deleteArchivium, archiv
     }, [isAuthenticated, navigate, fetchAllArchivium]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const EditArchivium = (archivium_id) => {

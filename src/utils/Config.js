@@ -1,12 +1,12 @@
 class Config{
 
     static Sidebar = [
-        {
-            index: "1",
-            title: "Users",
-            url: "/admin/users",
-            icons: "fa-solid fa-users text-lg text-white"
-        },
+        // {
+        //     index: "1",
+        //     title: "Users",
+        //     url: "/admin/users",
+        //     icons: "fa-solid fa-users text-lg text-white"
+        // },
         {
             index: "3",
             title: "Adusums",

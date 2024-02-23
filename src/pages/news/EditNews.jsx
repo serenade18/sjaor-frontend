@@ -28,7 +28,7 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
 
     useEffect(() => {
         if (!isAuthenticated && !id) {
-            navigate('/');
+            // navigate('/');
         } else {
             const fetchData = async () => {
                 try {

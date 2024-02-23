@@ -35,7 +35,7 @@ const Home = ({ isAuthenticated, fetchAdusums, adusums, editAdusums, user }) => 
     }, [isAuthenticated, navigate, fetchAdusums]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const verifyAdusum = async (adusumId) => {

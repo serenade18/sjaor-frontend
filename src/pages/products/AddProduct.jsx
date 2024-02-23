@@ -10,7 +10,7 @@ const AddProduct = ({ isAuthenticated, saveProducts }) => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-          navigate('/');
+        //   navigate('/');
         }
     }, [isAuthenticated, navigate]);
 

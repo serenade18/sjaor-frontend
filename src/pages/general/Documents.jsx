@@ -38,7 +38,7 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
     }, [isAuthenticated, navigate, fetchAllDocuments]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const [searchQuery, setSearchQuery] = useState('');

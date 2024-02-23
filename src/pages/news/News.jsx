@@ -40,7 +40,7 @@ const News = ({ isAuthenticated, fetchAllNews, deleteNews, news, user }) => {
     }, [isAuthenticated, navigate, fetchAllNews]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const viewNews = (news_id) => {

@@ -33,7 +33,7 @@ const PopesPrayerIntentions = ({ isAuthenticated, popesPrayers, fetchAllPopesPra
     }, [isAuthenticated, navigate, fetchAllPopesPrayers]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const EditPrayers = (popesPrayers_id) => {

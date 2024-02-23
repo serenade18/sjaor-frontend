@@ -37,7 +37,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
     }, [isAuthenticated, navigate, fetchAllShukran]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const [searchQuery, setSearchQuery] = useState('');

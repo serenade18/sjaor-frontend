@@ -33,7 +33,7 @@ const IgnatianThoughts = ({ isAuthenticated, fetchAllThoughts, ignatian_thoughts
     }, [isAuthenticated, navigate, fetchAllThoughts]);
 
     if (!isAuthenticated) {
-        navigate('/');
+        // navigate('/');
     } 
 
     const [searchQuery, setSearchQuery] = useState('');
