@@ -87,6 +87,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
         shukran_name: '',
         shukran_year: '',
         shukran_file: null,
+        month: ''
     })
 
     const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -106,6 +107,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
             shukran_name: '',
             shukran_year: '',
             shukran_file: null,
+            shukran_month: ''
         });
     };
 
@@ -117,6 +119,7 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
         formDataToSend.append('shukran_name', formData.shukran_name);
         formDataToSend.append('shukran_year', formData.shukran_year);
         formDataToSend.append('shukran_file', formData.shukran_file);
+        formDataToSend.append('shukran_month', formData.shukran_month);
 
         try {
             const response = await saveShukran(formDataToSend);
@@ -245,6 +248,30 @@ const Shukran = ({ isAuthenticated, fetchAllShukran, shukran, saveShukran, delet
                                                                     onChange={(e) => setFormData({ ...formData, shukran_year: e.target.value })}
                                                                     required
                                                                 />
+                                                            </div>
+                                                            <label>Month</label>
+                                                            <div className='input-group'>
+                                                                <select 
+                                                                    className='form-control' 
+                                                                    name='shukran_month' 
+                                                                    placeholder='Month'
+                                                                    value={formData.shukran_month}
+                                                                    onChange={(e) =>setFormData({ ...formData, shukran_month: e.target.value })}
+                                                                >
+                                                                    <option value="">--- Choose Month---</option>
+                                                                    <option value="January">January</option>
+                                                                    <option value="February">February</option>
+                                                                    <option value="March">March</option>
+                                                                    <option value="April">April</option>
+                                                                    <option value="May">May</option>
+                                                                    <option value="June">June</option>
+                                                                    <option value="July">July</option>
+                                                                    <option value="August">August</option>
+                                                                    <option value="September">September</option>
+                                                                    <option value="October">October</option>
+                                                                    <option value="November">November</option>
+                                                                    <option value="December">December</option>
+                                                                </select>
                                                             </div>
                                                             <label>Catalogue File</label>
                                                             <div className="input-group mb-3">

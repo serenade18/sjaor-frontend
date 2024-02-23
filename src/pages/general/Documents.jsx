@@ -66,7 +66,9 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
     const [formData, setFormData] = useState({
         document_name: '',
         document_file: null,
-        document_category: ''
+        document_category: '',
+        month:'',
+        year: '',
     })
 
     const [formData2, setFormData2] = useState({
@@ -94,7 +96,9 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
         setFormData({
             document_name: '',
             document_file: null,
-            document_category: ''
+            document_category: '',
+            month:'',
+            year: '',
         });
     };
 
@@ -117,6 +121,8 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
         formDataToSend.append('document_name', formData.document_name);
         formDataToSend.append('document_file', formData.document_file);
         formDataToSend.append('document_category', formData.document_category);
+        formDataToSend.append('month', formData.month);
+        formDataToSend.append('year', formData.year);
 
         try {
             const response = await saveDocuments(formDataToSend);
@@ -336,6 +342,42 @@ const Doucuments = ({ isAuthenticated, fetchAllDocuments, documents, saveDocumen
                                                                     }))}
                                                                     placeholder="--- Browse Category ---"
                                                                     isClearable
+                                                                />
+                                                            </div>
+                                                            <label>Month</label>
+                                                            <div className='input-group'>
+                                                                <select 
+                                                                    className='form-control' 
+                                                                    name='month' 
+                                                                    placeholder='Month'
+                                                                    value={formData.month}
+                                                                    onChange={(e) =>setFormData({ ...formData, month: e.target.value })}
+                                                                >
+                                                                    <option value="">--- Choose Month---</option>
+                                                                    <option value="January">January</option>
+                                                                    <option value="February">February</option>
+                                                                    <option value="March">March</option>
+                                                                    <option value="April">April</option>
+                                                                    <option value="May">May</option>
+                                                                    <option value="June">June</option>
+                                                                    <option value="July">July</option>
+                                                                    <option value="August">August</option>
+                                                                    <option value="September">September</option>
+                                                                    <option value="October">October</option>
+                                                                    <option value="November">November</option>
+                                                                    <option value="December">December</option>
+                                                                </select>
+                                                            </div>
+                                                            <label>Year</label>
+                                                            <div className="input-group mb-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="year"
+                                                                    placeholder="Year"
+                                                                    value={formData.year}
+                                                                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                                                                    required
                                                                 />
                                                             </div>
                                                             <div className="text-center">
