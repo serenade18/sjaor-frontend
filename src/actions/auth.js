@@ -591,7 +591,6 @@ export const fetchAdusums = () => async (dispatch, getState) => {
   }
 };
 
-
 export const fetchAllAdusums = () => async (dispatch, getState) => { 
   const { access } = getState().auth;
 

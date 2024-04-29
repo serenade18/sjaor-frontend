@@ -76,31 +76,6 @@ const EditNews = ({ isAuthenticated, fetchNewsDetails, editNews }) => {
         });
     };
 
-    // const handleFormSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     try {
-    //         await editNews(formData, id);
-
-    //         // Show success toast
-    //         toast.success('News updated successfully', {
-    //             position: 'top-right',
-    //             autoClose: 3000,
-    //             hideProgressBar: false,
-    //         });
-
-    //         navigate('/admin/news');
-    //     } catch (error) {
-    //         console.error('Error updating news', error.message);
-
-    //         // Show error toast
-    //         toast.error('Error updating news. Please try again.', {
-    //             position: 'top-right',
-    //             autoClose: 3000,
-    //             hideProgressBar: false,
-    //         });
-    //     }
-    // };
     const handleFormSubmit = async (e) => {
         e.preventDefault();
     

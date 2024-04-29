@@ -414,7 +414,7 @@ const Catalogues = ({ isAuthenticated, fetchAllCatalogues, catalogues, saveCatal
                                                                             <button
                                                                                 className="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"
                                                                                 onClick={() => downloadCatalogue(catalogues.id)}
-                                                                            >
+                                                                            > 
                                                                                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                                                                             </button>
                                                                             <span>Download</span>
